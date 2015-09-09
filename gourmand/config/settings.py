@@ -73,6 +73,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': env.db(),
 }
+DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 
 # Internationalization
