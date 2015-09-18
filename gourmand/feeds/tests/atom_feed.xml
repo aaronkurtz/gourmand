@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Ow My Sanity</title>
+    <link>https://www.comic-rocket.com/explore/ow-my-sanity/</link>
+    <description/>
+    <atom:link href="https://www.comic-rocket.com/explore/ow-my-sanity/" rel="self"/>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2015 04:12:23 -0000</lastBuildDate>
+    <item>
+      <title>Page 3</title>
+      <link>https://www.comic-rocket.com/read/ow-my-sanity/3</link>
+      <description>&lt;a href="/read/ow-my-sanity/3"&gt;Ow My Sanity - Page 3&lt;/a&gt;</description>
+      <guid>https://www.comic-rocket.com/read/ow-my-sanity/3</guid>
+    </item>
+    <item>
+      <title>Page 2</title>
+      <link>https://www.comic-rocket.com/read/ow-my-sanity/2</link>
+      <description>&lt;a href="/read/ow-my-sanity/2"&gt;Ow My Sanity - Page 2&lt;/a&gt;</description>
+      <guid>https://www.comic-rocket.com/read/ow-my-sanity/2</guid>
+    </item>
+    <item>
+      <title>Page 1</title>
+      <link>https://www.comic-rocket.com/read/ow-my-sanity/1</link>
+      <description>&lt;a href="/read/ow-my-sanity/1"&gt;Ow My Sanity - Page 1&lt;/a&gt;</description>
+      <guid>https://www.comic-rocket.com/read/ow-my-sanity/1</guid>
+    </item>
+  </channel>
+</rss>
