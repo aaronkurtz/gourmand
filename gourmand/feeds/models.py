@@ -9,7 +9,7 @@ class FeedManager(models.Manager):
         '''
         href = parsed_feed.get('href', href)  # Use Feedparser's HREF if available, otherwise use argument
         if not href:
-            raise ValidationError('HREF not found - unable to create feed', code='href_missing', params={})
+            raise ValidationError('HREF not found - unable to create feed', code='missing_href', params={})
         if parsed_feed.version == '':
             raise ValidationError('Version not found - unable to find proper RSS/Atom feed at %(href)s', code='invalid', params={'href': href})
         title = parsed_feed.feed.get('title', href)
