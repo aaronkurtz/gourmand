@@ -1,0 +1,7 @@
+#/bin/bash
+
+cd gourmand
+# Run Django unit tests
+python manage.py test
+# Bail out if migrations are necessary
+! python manage.py makemigrations -v 0 --dry-run -e
