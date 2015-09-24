@@ -28,7 +28,7 @@ class Feed(models.Model):
     objects = FeedManager()
 
     def __str__(self):
-        return self.title
+        return self.href
 
 
 class Article(models.Model):

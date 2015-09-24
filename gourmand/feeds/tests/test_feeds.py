@@ -13,7 +13,7 @@ class FeedTests(TestCase):
         self.assertEqual(feed.title, "Ow My Sanity")
         self.assertEqual(feed.link, "https://www.comic-rocket.com/explore/ow-my-sanity/")
         self.assertEqual(feed.href, "https://www.comic-rocket.com/explore/ow-my-sanity/rss")
-        self.assertEqual(str(feed), feed.title)
+        self.assertEqual(str(feed), feed.href)
 
     def test_needs_href(self):
         hrefless_feed = feedparser.parse('feeds/tests/atom_feed.xml')
