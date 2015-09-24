@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" media="screen" href="/~d/styles/rss1full.xsl"?>
+<?xml-stylesheet type="text/css" media="screen" href="http://feeds.nature.com/~d/styles/itemcontent.css"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:prism="http://prismstandard.org/namespaces/basic/2.0/" xmlns:admin="http://webns.net/mvcb/" xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0">
+  <channel rdf:about="http://www.nature.com/nature/current_issue/rss">
+    <title>Nature - Issue - nature.com science feeds</title>
+    <description>Nature is the international weekly journal of science: a magazine style journal that publishes full-length research papers in all disciplines of science, as well as News and Views, reviews, news, features, commentaries, web focuses and more, covering all branches of science and how science impacts upon all aspects of society and life.</description>
+    <link>http://www.nature.com/nature/current_issue/</link>
+    <admin:generatorAgent rdf:resource="http://www.nature.com/"/>
+    <admin:errorReportsTo rdf:resource="mailto:feedback@nature.com"/>
+    <dc:publisher>Nature Publishing Group</dc:publisher>
+    <dc:language>en</dc:language>
+    <dc:rights>© 2015 Nature Publishing Group</dc:rights>
+    <prism:publicationName>Nature</prism:publicationName>
+    <prism:issn>0028-0836</prism:issn>
+    <prism:eIssn>1476-4687</prism:eIssn>
+    <prism:copyright>© 2015 Nature Publishing Group</prism:copyright>
+    <prism:rightsAgent>permissions@nature.com</prism:rightsAgent>
+    <image rdf:resource="http://www.nature.com/includes/rj_globnavimages/nature_logo.gif"/>
+    <items>
+      <rdf:Seq>
+        <rdf:li rdf:resource="http://dx.doi.org/10.1038/525289a"/>
+      </rdf:Seq>
+    </items>
+    <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rdf+xml" href="http://feeds.nature.com/nature/rss/current"/>
+    <feedburner:info uri="nature/rss/current"/>
+    <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/"/>
+  </channel>
+  <image rdf:about="http://www.nature.com/includes/rj_globnavimages/nature_logo.gif">
+    <title>Nature</title>
+    <url>http://www.nature.com/includes/rj_globnavimages/nature_logo.gif</url>
+    <link>http://www.nature.com/nature/</link>
+  </image>
+  <item rdf:about="http://dx.doi.org/10.1038/525289a">
+    <title>Too close for comfort?</title>
+    <link>http://feeds.nature.com/~r/nature/rss/current/~3/JezCnbJUF74/525289a</link>
+    <description>Relationships between industry and researchers can be hard to define, but universities and other institutions must do more to scrutinize the work of their scientists for conflicts of interest.</description>
+    <content:encoded><![CDATA[
+			<p>
+            <b>Too close for comfort?</b>
+         </p>
+         <p>Nature 525, 7569 (2015). <a href="http://dx.doi.org/10.1038/525289a">doi:10.1038/525289a</a>
+         </p>
+         <p>Relationships between industry and researchers can be hard to define, but universities and other institutions must do more to scrutinize the work of their scientists for conflicts of interest.</p>
+				<img src="http://feeds.feedburner.com/~r/nature/rss/current/~4/JezCnbJUF74" height="1" width="1" alt=""/>]]></content:encoded>
+    <dc:title>Too close for comfort?</dc:title>
+    <dc:identifier>doi:10.1038/525289a</dc:identifier>
+    <dc:source>Nature 525, 7569 (2015)</dc:source>
+    <dc:date>2015-09-15</dc:date>
+    <prism:publicationName>Nature</prism:publicationName>
+    <prism:publicationDate>2015-09-15</prism:publicationDate>
+    <prism:doi>10.1038/525289a</prism:doi>
+    <prism:url>http://dx.doi.org/10.1038/525289a</prism:url>
+    <prism:volume>525</prism:volume>
+    <prism:number>7569</prism:number>
+    <prism:section>Editorial</prism:section>
+    <prism:startingPage>289</prism:startingPage>
+    <prism:endingPage>289</prism:endingPage>
+    <feedburner:origLink>http://dx.doi.org/10.1038/525289a</feedburner:origLink>
+  </item>
+</rdf:RDF>
