@@ -45,3 +45,10 @@ for tz_descr in map(str.split, tz_str.split('\n')):
     tz_offset = int(float(tz_descr[0]) * 3600)
     for tz_code in tz_descr[1:]:
         tzd[tz_code] = tz_offset
+
+
+def chain_gets(variable, attributes):
+    for name in attributes:
+        test = variable.get(name, None)
+        if test:
+            return test

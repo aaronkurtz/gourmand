@@ -4,11 +4,12 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
 import feedparser
 import dateutil.parser
 
-from feeds.utils import tzd
+from feeds.utils import tzd, chain_gets
 
 URL_MAX_LEN = 2048
 logger = logging.getLogger(__name__)
@@ -73,8 +74,10 @@ class ArticleManager(models.Manager):
         '''
         # TODO Handle multiple links
         main_link = entry.get('link', '')
-        title = entry.get('title', main_link)
-        when_unparsed = entry.get('updated', entry.get('published', entry.get('created', None)))
+        title = chain_gets(entry, ('title', 'link', 'id'))
+        if not title:
+            raise ValidationError("Title not found - unable to save Article", code='missing_title', params={})
+        when_unparsed = chain_gets(entry, ['updated', 'published', 'created'])
         if when_unparsed:
             when = dateutil.parser.parse(when_unparsed, fuzzy=True, tzinfos=tzd)
             if timezone.is_naive(when):
@@ -82,6 +85,10 @@ class ArticleManager(models.Manager):
         else:
             when = timezone.now()
         gid = entry.get('id', main_link)
+        if not gid:
+            gid = slugify(title)
+            if when_unparsed:
+                gid = "{}@{}".format(when.timestamp(), gid)
         # TODO Handle multiple contents
         summary = entry.get('summary', None)
         if summary:
@@ -92,6 +99,8 @@ class ArticleManager(models.Manager):
             except KeyError:
                 main_content = title
 
+        if entry.get('link', None) is None and 'links' in entry:
+            raise ValidationError("Link not found but links found - unable to save Article", code='missing_link', params={})
         return Article(when=when, main_link=main_link, title=title, gid=gid, main_content=main_content)
 
 
