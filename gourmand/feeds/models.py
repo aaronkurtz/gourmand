@@ -1,13 +1,17 @@
+import logging
+
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils import timezone
 
+import feedparser
 import dateutil.parser
 
 from feeds.utils import tzd
 
 URL_MAX_LEN = 2048
+logger = logging.getLogger(__name__)
 
 
 class FeedManager(models.Manager):
@@ -35,6 +39,32 @@ class Feed(models.Model):
 
     def __str__(self):
         return self.href
+
+    def get_parsed(self):
+        # TODO handle ETags, Last-Modified
+        parsed_feed = feedparser.parse(self.href)
+        return parsed_feed
+
+    def update(self, parsed_feed=None, href=None):
+        # TODO handle ETags, Last-Modified
+        if not parsed_feed:
+            parsed_feed = self.get_parsed()
+        href = parsed_feed.get('href', href)  # Use Feedparser's HREF if available, otherwise use argument
+        if not href:
+            raise ValidationError('HREF not found - unable to create feed', code='missing_href', params={})
+        if parsed_feed.version == '':
+            raise ValidationError('Version not found - unable to find proper RSS/Atom feed at %(href)s', code='invalid', params={'href': href})
+        for entry in parsed_feed.entries:
+            try:
+                article = Article.objects.create_from_entry(entry)
+            except Exception as e:
+                logger.error('Unable to update feed {} - {}'.format(self.href, e))
+                return
+            # TODO handle updated feeds
+            if not Article.objects.filter(feed=self, gid=article.gid).exists():
+                article.feed = self
+                article.save()
+
 
 class ArticleManager(models.Manager):
     def create_from_entry(self, entry):
