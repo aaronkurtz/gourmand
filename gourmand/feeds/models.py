@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils import timezone
 
@@ -68,7 +69,7 @@ class Article(models.Model):
     feed = models.ForeignKey(Feed)
     when = models.DateTimeField()
     title = models.TextField()
-    gid = models.TextField(verbose_name="Global Identifier")
+    gid = models.TextField(verbose_name="Global Identifier", validators=[MinLengthValidator(1, message="GID can not be blank")])
     main_content = models.TextField()
     main_link = models.URLField(max_length=URL_MAX_LEN)
 
