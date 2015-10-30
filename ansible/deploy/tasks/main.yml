@@ -1,0 +1,10 @@
+- file: path={{ virtualenv_base_path }} state=directory owner=www-data group=www-data
+  sudo: true
+- name: Manually create the initial virtualenv
+  command: virtualenv -p python3 {{ virtualenv_path }} creates="{{ virtualenv_path }}"
+  become: yes
+  become_user: www-data
+- name: Setup Virtualenv requirements
+  pip: virtualenv={{ virtualenv_path }} requirements={{ app_path }}/requirements.txt
+  become: yes
+  become_user: www-data
