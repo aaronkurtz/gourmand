@@ -31,6 +31,7 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     'django_extensions',
+    'bootstrap3',
 )
 
 LOCAL_APPS = (

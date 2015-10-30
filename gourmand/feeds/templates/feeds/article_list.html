@@ -1,0 +1,21 @@
+{% extends "_layout/base.html" %}
+
+{% block page_title %}Gourmand - {{ feed.title}}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1><a href="{% url 'front' %}">Gourmand RSS Reader</a></h1>
+    <h3>{{ feed.title }} - {{ feed.href }}</h3>
+<ul class="list-group">
+    {% for article in object_list %}
+        <li class="list-group-item">
+            <span class="badge">{{ article.when|timesince }} ago</span>
+            <h4><a href="{{ article.main_link }}">{{ article.title }}</a></h4>
+            <p>
+            {{ article.main_content|safe }}
+            </p>
+        </li>
+    {% endfor %}
+</ul>
+</div>
+{% endblock content %}
