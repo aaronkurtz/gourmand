@@ -2,6 +2,9 @@
   sudo: yes
   apt: pkg={{ item }} state=installed update_cache=yes
   with_items:
+    # Nginx
+    - nginx
+
     # Database
     - postgresql
     - libpq-dev
@@ -10,6 +13,20 @@
     # Python3
     - python-virtualenv
     - python3-dev
+
+- name: Disable Default Nginx Site
+  sudo: yes
+  file: dest=/etc/nginx/sites-enabled/default state=absent
+
+- name: Add Gourmand Nginx Site
+  sudo: yes
+  template: src=gourmand_nginx.j2 dest=/etc/nginx/sites-available/gourmand owner=root group=root
+
+- name: Enable Gourmand Nginx Site
+  sudo: yes
+  file: src=/etc/nginx/sites-available/gourmand dest=/etc/nginx/sites-enabled/gourmand state=link
+  notify:
+    - Restart Nginx
 
 - name: Create Database
   sudo: yes
