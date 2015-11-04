@@ -3,6 +3,7 @@ server {
     server_name _;
 
     location / {
-        uwsgi_pass unix:/tmp/uwsgi.sock;
+        uwsgi_pass unix:///tmp/uwsgi.sock;
+        include uwsgi_params;
     }
 }
