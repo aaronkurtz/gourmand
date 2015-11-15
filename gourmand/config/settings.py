@@ -4,7 +4,7 @@ Django settings for gourmand project.
 
 import environ
 
-env = environ.Env(DEBUG=(bool, False))
+env = environ.Env(DEBUG=(bool, False), ALLOWED_HOSTS=(list, []))
 
 BASE_DIR = environ.Path(__file__) - 2
 
@@ -15,7 +15,7 @@ BASE_DIR = environ.Path(__file__) - 2
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 
 # Application definition
