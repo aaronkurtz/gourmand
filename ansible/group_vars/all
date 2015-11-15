@@ -1,2 +1,6 @@
-database_url: postgres://gourmand:dev@localhost:5432/gourmandb?ATOMIC_REQUESTS=True
-secret_key: supersecret
+db_user: gourmand
+db_password: dev
+db_name: gourmandb
+db_host: "localhost:5432"
+db_url: "postgres://{{db_user}}:{{db_password}}@{{db_host}}/{{db_name}}"
+uwsgi_path: "/tmp/uwsgi.sock"

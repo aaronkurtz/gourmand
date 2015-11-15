@@ -1,0 +1,21 @@
+- name: Install Nginx
+  sudo: yes
+  apt: pkg={{ item }} state=installed update_cache=yes cache_valid_time=3600
+  with_items:
+    - nginx
+
+- name: Disable Default Nginx Site
+  sudo: yes
+  file: dest=/etc/nginx/sites-enabled/default state=absent
+
+- name: Add Gourmand Nginx Site
+  sudo: yes
+  template: src=gourmand_nginx.j2 dest=/etc/nginx/sites-available/gourmand owner=root group=root
+  notify:
+    - Restart Nginx
+
+- name: Enable Gourmand Nginx Site
+  sudo: yes
+  file: src=/etc/nginx/sites-available/gourmand dest=/etc/nginx/sites-enabled/gourmand state=link
+  notify:
+    - Restart Nginx

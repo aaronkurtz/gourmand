@@ -1,6 +1,0 @@
-- name: Restart Postgres
-  sudo: yes
-  service: name=postgresql state=restarted
-- name: Restart Nginx
-  sudo: yes
-  service: name=nginx state=restarted

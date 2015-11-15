@@ -1,20 +1,31 @@
-- file: path={{ virtualenv_base_path }} state=directory owner=www-data group=www-data
+- name: Install Gourmand Webapp packages
+  sudo: yes
+  apt: pkg={{ item }} state=installed update_cache=yes cache_valid_time=3600
+  with_items:
+    # Uwsgi
+    - uwsgi
+    - uwsgi-plugin-python3
+    # Gourmand requirements
+    - python-virtualenv
+    - python3-dev
+    - libpq-dev
+
+- name: Create the virtualenv base directory
+  file: path={{ virtualenv_base_path }} state=directory
   sudo: true
 
 - name: Manually create the initial virtualenv
   command: virtualenv -p python3 {{ virtualenv_path }} creates="{{ virtualenv_path }}"
-  become: yes
-  become_user: www-data
+  sudo: true
 
 - name: Setup Virtualenv requirements
   pip: virtualenv={{ virtualenv_path }} requirements={{ app_path }}/requirements.txt
-  become: yes
-  become_user: www-data
+  sudo: true
   notify:
     - Restart Uwsgi
 
 - name: Add Gourmand Uwsgi app
-  sudo: yes
+  sudo: true
   template: src=gourmand_uwsgi.ini.j2 dest=/etc/uwsgi/apps-available/gourmand.ini owner=root group=root mode=0660
   notify:
     - Restart Uwsgi
@@ -25,8 +36,8 @@
     app_path={{app_path}}
     virtualenv={{virtualenv_path}}
   environment:
-    SECRET_KEY: "{{secret_key}}"
-    DATABASE_URL: "{{database_url}}"
+    SECRET_KEY: "{{django_secret}}"
+    DATABASE_URL: "{{db_url}}"
 
 - name: Apply Django migrations
   django_manage:
@@ -34,11 +45,11 @@
     app_path={{app_path}}
     virtualenv={{virtualenv_path}}
   environment:
-    SECRET_KEY: "{{secret_key}}"
-    DATABASE_URL: "{{database_url}}"
+    SECRET_KEY: "{{django_secret}}"
+    DATABASE_URL: "{{db_url}}"
 
 - name: Enable Gourmand Uwsgi app
-  sudo: yes
+  sudo: true
   file: src=/etc/uwsgi/apps-available/gourmand.ini dest=/etc/uwsgi/apps-enabled/gourmand.ini state=link
   notify:
     - Restart Uwsgi

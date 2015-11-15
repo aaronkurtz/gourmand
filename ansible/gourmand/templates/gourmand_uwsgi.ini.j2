@@ -1,0 +1,10 @@
+[uwsgi]
+plugin = python3
+chdir = {{ app_path }}
+venv = {{ virtualenv_path }}
+module = config.wsgi:application
+processes = {{ ansible_processor_cores * 2 + 1}}
+socket = {{uwsgi_path}}
+env = SECRET_KEY={{django_secret}}
+env = DATABASE_URL={{db_url}}
+env = ALLOWED_HOSTS={{allowed_hosts}}
