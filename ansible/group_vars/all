@@ -1,0 +1,2 @@
+database_url: postgres://gourmand:dev@localhost:5432/gourmandb?ATOMIC_REQUESTS=True
+secret_key: supersecret
