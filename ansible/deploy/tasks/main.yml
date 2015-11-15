@@ -1,10 +1,26 @@
 - file: path={{ virtualenv_base_path }} state=directory owner=www-data group=www-data
   sudo: true
+
 - name: Manually create the initial virtualenv
   command: virtualenv -p python3 {{ virtualenv_path }} creates="{{ virtualenv_path }}"
   become: yes
   become_user: www-data
+
 - name: Setup Virtualenv requirements
   pip: virtualenv={{ virtualenv_path }} requirements={{ app_path }}/requirements.txt
   become: yes
   become_user: www-data
+  notify:
+    - Restart Uwsgi
+
+- name: Add Gourmand Uwsgi app
+  sudo: yes
+  template: src=gourmand_uwsgi.ini.j2 dest=/etc/uwsgi/apps-available/gourmand.ini owner=root group=root mode=0660
+  notify:
+    - Restart Uwsgi
+
+- name: Enable Gourmand Uwsgi app
+  sudo: yes
+  file: src=/etc/uwsgi/apps-available/gourmand.ini dest=/etc/uwsgi/apps-enabled/gourmand.ini state=link
+  notify:
+    - Restart Uwsgi

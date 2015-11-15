@@ -5,6 +5,10 @@
     # Nginx
     - nginx
 
+    # Uwsgi
+    - uwsgi
+    - uwsgi-plugin-python3
+
     # Database
     - postgresql
     - libpq-dev
