@@ -3,9 +3,7 @@ python:
     - "3.4"
     - "3.5"
 env:
-    - SECRET_KEY=traviscikey
-    - DATABASE_URL=postgres://postgres@localhost/gourmandci
-    - ALLOWED_HOSTS="*,"
+    - SECRET_KEY=traviscikey DATABASE_URL=postgres://postgres@localhost/gourmandci ALLOWED_HOSTS="*,"
 services:
     - postgresql
 install:
@@ -13,4 +11,4 @@ install:
 before_script:
     - psql -c 'create database gourmandci;' -U postgres
 script:
-    - cd gourmand && python mangage.py migrate && python manage.py test
+    - cd gourmand && python manage.py migrate && python manage.py test
