@@ -1,8 +1,12 @@
 #/bin/bash
-set -e
+git stash -q --keep-index --include-untracked
 
 cd gourmand
+# Check to see if migrations are necessary
+! python manage.py makemigrations -v 0 --dry-run -e || { echo "Commit failed - migration needed." 1>&2; RESULT=1; }
 # Run Django unit tests
-python manage.py test
-# Bail out if migrations are necessary
-! python manage.py makemigrations -v 0 --dry-run -e
+python manage.py test -v 0 || { echo "Commit failed - Django testing failed" 1>&2; RESULT=1;}
+
+cd ..
+git stash pop -q
+exit $RESULT
