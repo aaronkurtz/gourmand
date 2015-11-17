@@ -1,0 +1,21 @@
+# Django
+Django
+
+# Django Requirements
+psycopg2
+
+# Django Third-Party
+django-bootstrap3
+django-environ
+django-extensions
+whitenoise
+
+# Third-Party
+feedparser
+python-dateutil
+
+# Developer Requirements
+pip-tools
+
+# Testing
+coverage
