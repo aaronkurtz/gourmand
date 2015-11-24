@@ -7,6 +7,7 @@
 click==5.1                # via pip-tools
 coverage==4.0.2
 django-bootstrap3==6.2.2
+django-braces==1.8.1
 django-environ==0.4.0
 django-extensions==1.5.9
 django==1.8.6
@@ -15,5 +16,5 @@ first==2.0.1              # via pip-tools
 pip-tools==1.1.6
 psycopg2==2.6.1
 python-dateutil==2.4.2
-six==1.10.0               # via django-environ, django-extensions, pip-tools, python-dateutil
+six==1.10.0               # via django-braces, django-environ, django-extensions, pip-tools, python-dateutil
 whitenoise==2.0.6

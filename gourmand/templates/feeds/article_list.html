@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container">
-    <h1><a href="{% url 'front' %}">Gourmand RSS Reader</a></h1>
+    <h1><a href="{% url 'feed_list' %}">Gourmand RSS Reader</a></h1>
     <h3>{{ feed.title }} - {{ feed.href }}</h3>
 <ul class="list-group">
     {% for article in object_list %}

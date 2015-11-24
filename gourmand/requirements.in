@@ -6,6 +6,7 @@ psycopg2
 
 # Django Third-Party
 django-bootstrap3
+django-braces
 django-environ
 django-extensions
 whitenoise
