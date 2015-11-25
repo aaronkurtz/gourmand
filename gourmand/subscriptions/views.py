@@ -29,7 +29,7 @@ class PersonalArticleList(ListView):
 
     def get_queryset(self):
         self.sub = get_object_or_404(Subscription, pk=self.kwargs['pk'])
-        return PersonalArticle.objects.filter(sub=self.sub).order_by('article__when')
+        return PersonalArticle.objects.filter(sub=self.sub).select_related('article').order_by('article__when')
 
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
