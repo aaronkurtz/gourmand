@@ -1,9 +1,10 @@
 from django.db.models import Count
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, ListView
 
 from braces.views import LoginRequiredMixin
 
-from .models import Subscription
+from .models import Subscription, PersonalArticle
 
 
 class FrontPage(TemplateView):
@@ -21,3 +22,16 @@ class Reader(LoginRequiredMixin, ListView):
             extra(select={'unread': 'SELECT COUNT(*) FROM subscriptions_personalarticle WHERE ' +
                           'subscriptions_subscription.id = subscriptions_personalarticle.sub_id AND active IS TRUE'})
         return subs
+
+
+class PersonalArticleList(ListView):
+    model = PersonalArticle
+
+    def get_queryset(self):
+        self.sub = get_object_or_404(Subscription, pk=self.kwargs['pk'])
+        return PersonalArticle.objects.filter(sub=self.sub).order_by('article__when')
+
+    def get_context_data(self, **kwargs):
+        context = super(self.__class__, self).get_context_data(**kwargs)
+        context['sub'] = self.sub
+        return context
