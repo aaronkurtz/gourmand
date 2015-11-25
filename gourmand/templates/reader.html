@@ -8,6 +8,8 @@
 <ul class="list-group">
     {% for sub in object_list %}
         <li class="list-group-item">
+            <span class="badge">{{ sub.unread }} article{{sub.articles|pluralize}} unread</span>
+            <span class="badge">{{ sub.articles }} article{{sub.articles|pluralize}}</span>
             <a href="">{{ sub.feed.title }} - {{ sub.feed.href }}</a>
         </li>
     {% endfor %}
