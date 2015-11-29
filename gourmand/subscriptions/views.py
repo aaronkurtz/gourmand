@@ -24,11 +24,13 @@ class Reader(LoginRequiredMixin, ListView):
         return subs
 
 
-class PersonalArticleList(ListView):
+class PersonalArticleList(LoginRequiredMixin, ListView):
     model = PersonalArticle
 
     def get_queryset(self):
         self.sub = get_object_or_404(Subscription, pk=self.kwargs['pk'])
+        if self.sub.owner != self.request.user:
+            raise PermissionDenied
         return PersonalArticle.objects.filter(sub=self.sub).select_related('article').order_by('article__when')
 
     def get_context_data(self, **kwargs):
