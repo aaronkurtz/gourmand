@@ -14,6 +14,29 @@
   {% endblock header %}
 </head>
 <body>
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href={% url 'front' %}>Gourmand</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="navbar navbar-nav">
+                {% block navbar %}
+                {% endblock %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            {% if request.user.is_authenticated %}
+                <li><a href="#">Account</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="#"><s>Sign-up</s></a></li>
+            {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+{% bootstrap_messages %}
 {% block body %}
   {% block content%}
   {% endblock %}
