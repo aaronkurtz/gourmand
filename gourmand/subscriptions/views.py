@@ -1,10 +1,12 @@
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, FormView
 
-from braces.views import LoginRequiredMixin
+from braces.views import LoginRequiredMixin, UserFormKwargsMixin
 
+from .forms import NewSubForm
 from .models import Subscription, PersonalArticle
 
 
@@ -38,3 +40,16 @@ class PersonalArticleList(LoginRequiredMixin, ListView):
         context = super(self.__class__, self).get_context_data(**kwargs)
         context['sub'] = self.sub
         return context
+
+
+class AddSubscription(LoginRequiredMixin, UserFormKwargsMixin, FormView):
+    form_class = NewSubForm
+    template_name = "subscriptions/add_subscription.html"
+    success_url = reverse_lazy('reader')
+
+    def form_valid(self, form):
+        feed = form.cleaned_data['feed']
+        feed.update()
+        sub = Subscription.objects.create(owner=self.request.user, feed=feed)
+        sub.populate()
+        return super(self.__class__, self).form_valid(form)
