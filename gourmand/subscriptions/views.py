@@ -32,6 +32,7 @@ class Reader(LoginRequiredMixin, ListView):
         subs = subs.annotate(articles=Count('feed__article')).\
             extra(select={'unread': 'SELECT COUNT(*) FROM subscriptions_personalarticle WHERE ' +
                           'subscriptions_subscription.id = subscriptions_personalarticle.sub_id AND active IS TRUE'})
+        subs = subs.order_by('feed__title')
         return subs
 
 
