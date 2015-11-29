@@ -15,6 +15,10 @@ class Subscription(models.Model):
     def __str__(self):
         return u"{}'s {}".format(self.owner, self.feed)
 
+    def populate(self):
+        new_articles = feed.article_set.exclude(personalarticle__sub=self)
+        PersonalArticle.objects.bulk_create([PersonalArticle(sub=self, article=article) for article in new_articles])
+
 
 class PersonalArticle(models.Model):
     sub = models.ForeignKey(Subscription)
