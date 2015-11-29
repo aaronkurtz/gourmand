@@ -106,3 +106,7 @@ STATICFILES_DIRS = (
 )
 STATIC_ROOT = BASE_DIR('static')
 WHITENOISE_ROOT = BASE_DIR('root_files')
+
+
+# Authentication
+LOGIN_REDIRECT_URL = 'reader'
