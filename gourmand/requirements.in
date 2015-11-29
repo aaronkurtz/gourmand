@@ -17,6 +17,7 @@ feedparser
 python-dateutil
 
 # Developer Requirements
+ipython
 pip-tools
 
 # Testing
