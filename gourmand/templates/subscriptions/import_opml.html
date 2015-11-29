@@ -1,0 +1,20 @@
+{% extends "_layout/base.html" %}
+{% load bootstrap3 %}
+
+{% block page_title %}Import OPML{% endblock %}
+
+{% block content %}
+<div class="container">
+<p>
+    <form class="form" action="{% url 'import_opml' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                Import OPML
+            </button>
+        {% endbuttons %}
+    </form>
+</p>
+</div>
+{% endblock content %}

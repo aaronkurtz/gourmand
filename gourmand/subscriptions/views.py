@@ -1,12 +1,18 @@
-from django.core.exceptions import PermissionDenied
+from collections import Counter
+
+from django.contrib import messages
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
+from django.template.defaultfilters import pluralize
 from django.views.generic import TemplateView, ListView, FormView
 
 from braces.views import LoginRequiredMixin, UserFormKwargsMixin
+import feedparser
 
-from .forms import NewSubForm
+from feeds.models import Feed
+from .forms import NewSubForm, ImportOPMLForm
 from .models import Subscription, PersonalArticle
 
 
@@ -52,4 +58,41 @@ class AddSubscription(LoginRequiredMixin, UserFormKwargsMixin, FormView):
         sub = Subscription.objects.create(owner=self.request.user, feed=feed)
         sub.populate()
         messages.success(self.request, "You have subscribed to <strong>{feed}</strong>".format(feed=feed.title))
+        return super(self.__class__, self).form_valid(form)
+
+
+class ImportOPML(LoginRequiredMixin, UserFormKwargsMixin, FormView):
+    form_class = ImportOPMLForm
+    template_name = "subscriptions/import_opml.html"
+    success_url = reverse_lazy('reader')
+
+    def form_valid(self, form):
+        feeds = form.cleaned_data['feeds']
+        # TODO Do this in an async task
+        urls = [f.get('xmlUrl', None) for f in feeds]
+        c = Counter()
+        for url in urls:
+            if Subscription.objects.filter(owner=self.request.user, feed__href=url).exists():
+                c['sub_exists'] += 1
+                continue
+            if not Feed.objects.filter(href=url).exists():
+                try:
+                    fp = feedparser.parse(url)
+                    feed = Feed.objects.create_from_feed(fp)
+                    feed.save()
+                    feed.update(fp)
+                except ValidationError:
+                    c['error'] += 1
+                    continue
+            else:
+                feed = Feed.objects.get(href=url)
+            sub = Subscription.objects.create(owner=self.request.user, feed=feed)
+            sub.populate()
+            c['subbed'] += 1
+        if c['subbed']:
+            messages.success(self.request, "You subscribed to {sub} feed{s}.".format(sub=c['subbed'], s=pluralize(c['subbed'])))
+        if c['error']:
+            messages.error(self.request, "There were errors importing {error} feed{s}.".format(error=c['error'], s=pluralize(c['error'])))
+        if c['sub_exists']:
+            messages.info(self.request, "You were already subscribed to {sub_exists} feed{s}.".format(sub_exists=c['sub_exists'], s=pluralize(c['sub_exists'])))
         return super(self.__class__, self).form_valid(form)

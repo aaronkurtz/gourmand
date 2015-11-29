@@ -7,6 +7,7 @@
 click==6.2                # via pip-tools
 coverage==4.0.3
 decorator==4.0.4          # via ipython, traitlets
+defusedxml==0.4.1
 django-bootstrap3==6.2.2
 django-braces==1.8.1
 django-debug-toolbar==1.4
