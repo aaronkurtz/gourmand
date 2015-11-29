@@ -6,7 +6,7 @@
 <div class="container">
 <a class="btn btn-primary" href="{% url 'add_subscription' %}">Add Feed</a>
 <a class="btn btn-primary" href="{% url 'import_opml' %}">Import OPML</a>
-<a class="btn btn-primary disabled" href="#">Export OPML</a>
+<a class="btn btn-primary" href="{% url 'export_opml' %}">Export OPML</a>
 <p>
 <ul class="list-group">
     {% for sub in object_list %}

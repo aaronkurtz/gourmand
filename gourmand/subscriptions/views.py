@@ -4,9 +4,10 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import pluralize
-from django.views.generic import TemplateView, ListView, FormView
+from django.views.generic import TemplateView, ListView, FormView, View
 
 from braces.views import LoginRequiredMixin, UserFormKwargsMixin
 import feedparser
@@ -14,6 +15,7 @@ import feedparser
 from feeds.models import Feed
 from .forms import NewSubForm, ImportOPMLForm
 from .models import Subscription, PersonalArticle
+from .utils import create_opml
 
 
 class FrontPage(TemplateView):
@@ -96,3 +98,11 @@ class ImportOPML(LoginRequiredMixin, UserFormKwargsMixin, FormView):
         if c['sub_exists']:
             messages.info(self.request, "You were already subscribed to {sub_exists} feed{s}.".format(sub_exists=c['sub_exists'], s=pluralize(c['sub_exists'])))
         return super(self.__class__, self).form_valid(form)
+
+
+class ExportOPML(LoginRequiredMixin, View):
+    def get(self, request):
+        opml = create_opml(request.user)
+        response = HttpResponse(opml, content_type='text/x-opml')
+        response['Content-Disposition'] = 'attachment; filename="gourmand.opml"'
+        return response
