@@ -110,3 +110,7 @@ WHITENOISE_ROOT = BASE_DIR('root_files')
 
 # Authentication
 LOGIN_REDIRECT_URL = 'reader'
+
+
+# Bootstrap3 settings - http://django-bootstrap3.readthedocs.org/en/latest/settings.html
+BOOTSTRAP3 = {'include_jquery': True}
