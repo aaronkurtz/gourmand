@@ -16,7 +16,7 @@ class Subscription(models.Model):
         return u"{}'s {}".format(self.owner, self.feed)
 
     def populate(self):
-        new_articles = feed.article_set.exclude(personalarticle__sub=self)
+        new_articles = self.feed.article_set.exclude(personalarticle__sub=self)
         PersonalArticle.objects.bulk_create([PersonalArticle(sub=self, article=article) for article in new_articles])
 
 
