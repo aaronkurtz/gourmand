@@ -49,7 +49,6 @@ class AddSubscription(LoginRequiredMixin, UserFormKwargsMixin, FormView):
 
     def form_valid(self, form):
         feed = form.cleaned_data['feed']
-        feed.update()
         sub = Subscription.objects.create(owner=self.request.user, feed=feed)
         sub.populate()
         messages.success(self.request, "You have subscribed to <strong>{feed}</strong>".format(feed=feed.title))

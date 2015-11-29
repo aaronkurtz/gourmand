@@ -21,5 +21,6 @@ class NewSubForm(UserKwargModelFormMixin, forms.Form):
         fp = feedparser.parse(url)
         feed = Feed.objects.create_from_feed(fp)
         feed.save()
+        feed.update(fp)
         cleaned_data['feed'] = feed
         return cleaned_data
