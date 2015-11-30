@@ -7,7 +7,7 @@ from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import pluralize
-from django.views.generic import TemplateView, ListView, FormView, View
+from django.views.generic import TemplateView, ListView, FormView, View, RedirectView, DetailView
 
 from braces.views import LoginRequiredMixin, UserFormKwargsMixin
 import feedparser
@@ -107,3 +107,28 @@ class ExportOPML(LoginRequiredMixin, View):
         response = HttpResponse(opml, content_type='text/x-opml')
         response['Content-Disposition'] = 'attachment; filename="gourmand.opml"'
         return response
+
+
+class ReadNew(LoginRequiredMixin, RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        sub = get_object_or_404(Subscription, owner=self.request.user, pk=kwargs['pk'])
+        try:
+            oldest_unread = sub.personalarticle_set.filter(active=True).earliest('article__when')
+            return reverse_lazy('article', args=[oldest_unread.pk])
+        except PersonalArticle.DoesNotExist:
+            return reverse_lazy('reader')
+
+
+class ArticleReader(LoginRequiredMixin, DetailView):
+    context_object_name = "personal_article"
+
+    def get_queryset(self):
+        return PersonalArticle.objects.filter(sub__owner=self.request.user).select_related('article', 'sub', 'sub__feed')
+
+    def get_object(self):
+        object = super(self.__class__, self).get_object()
+        object.active = False
+        object.save()
+        return object
