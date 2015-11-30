@@ -7,7 +7,7 @@ from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import pluralize
-from django.views.generic import TemplateView, ListView, FormView, View, RedirectView, DetailView
+from django.views.generic import TemplateView, ListView, FormView, View, RedirectView, DetailView, DeleteView
 
 from braces.views import LoginRequiredMixin, UserFormKwargsMixin
 import feedparser
@@ -62,6 +62,20 @@ class AddSubscription(LoginRequiredMixin, UserFormKwargsMixin, FormView):
         sub.populate()
         messages.success(self.request, "You have subscribed to <strong>{feed}</strong>".format(feed=feed.title))
         return super(self.__class__, self).form_valid(form)
+
+
+class RemoveSubscription(LoginRequiredMixin, DeleteView):
+    def get_queryset(self):
+        return Subscription.objects.filter(owner=self.request.user).select_related('feed')
+
+    def get_object(self):
+        object = super(self.__class__, self).get_object()
+        self.title = object.feed.title
+        return object
+
+    def get_success_url(self):
+        messages.success(self.request, "You unsubscribed from {title}".format(title=self.title))
+        return reverse_lazy('reader')
 
 
 class ImportOPML(LoginRequiredMixin, UserFormKwargsMixin, FormView):
