@@ -26,7 +26,7 @@
 
 - name: Add Gourmand Uwsgi app
   sudo: true
-  template: src=gourmand_uwsgi.ini.j2 dest=/etc/uwsgi/apps-available/gourmand.ini owner=root group=root mode=0660
+  template: src=gourmand_uwsgi.ini.j2 dest=/etc/uwsgi/apps-available/gourmand.ini owner=root group=root mode=0664
   notify:
     - Restart Uwsgi
 
