@@ -68,10 +68,10 @@ class RemoveSubscription(LoginRequiredMixin, DeleteView):
     def get_queryset(self):
         return Subscription.objects.filter(owner=self.request.user).select_related('feed')
 
-    def get_object(self):
-        object = super(self.__class__, self).get_object()
-        self.title = object.feed.title
-        return object
+    def get_object(self, queryset=None):
+        obj = super(self.__class__, self).get_object(queryset)
+        self.title = obj.feed.title
+        return obj
 
     def get_success_url(self):
         messages.success(self.request, "You unsubscribed from {title}".format(title=self.title))
@@ -142,8 +142,8 @@ class ArticleReader(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         return PersonalArticle.objects.filter(sub__owner=self.request.user).select_related('article', 'sub', 'sub__feed')
 
-    def get_object(self):
-        object = super(self.__class__, self).get_object()
-        object.active = False
-        object.save()
-        return object
+    def get_object(self, queryset=None):
+        obj = super(self.__class__, self).get_object(queryset)
+        obj.active = False
+        obj.save()
+        return obj
