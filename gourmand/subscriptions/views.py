@@ -112,7 +112,7 @@ class ImportOPML(LoginRequiredMixin, UserFormKwargsMixin, FormView):
             messages.error(self.request, "There were errors importing {error} feed{s}.".format(error=c['error'], s=pluralize(c['error'])))
         if c['sub_exists']:
             messages.info(self.request,
-                    "You were already subscribed to {sub_exists} feed{s}.".format(sub_exists=c['sub_exists'], s=pluralize(c['sub_exists'])))
+                          "You were already subscribed to {sub_exists} feed{s}.".format(sub_exists=c['sub_exists'], s=pluralize(c['sub_exists'])))
         return super(self.__class__, self).form_valid(form)
 
 
