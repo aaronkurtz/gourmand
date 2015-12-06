@@ -46,7 +46,7 @@ class ImportOPMLForm(UserKwargModelFormMixin, forms.Form):
         opml_contents = opml_file.read()
         try:
             opml = fromstring(opml_contents, forbid_dtd=True)
-            feeds = opml.findall('./body/outline')
+            feeds = opml.findall('./body//outline[@xmlUrl]')
             if not feeds:
                 raise forms.ValidationError('No feeds were found in the OPML file', code="no_feeds")
         except DefusedXmlException:
