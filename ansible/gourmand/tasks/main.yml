@@ -30,6 +30,10 @@
   notify:
     - Restart Uwsgi
 
+- name: Add Gourmand settings to profiles.d
+  sudo: true
+  template: src=gourmand.sh.j2 dest=/etc/profile.d/gourmand.sh owner=root group=root mode=0775
+
 - name: Collect Django static files
   django_manage:
     command=collectstatic
