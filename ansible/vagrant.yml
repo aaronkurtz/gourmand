@@ -2,4 +2,4 @@
   roles:
       - db
       - webserver
-      - gourmand
+      - { role: gourmand, debug: true }

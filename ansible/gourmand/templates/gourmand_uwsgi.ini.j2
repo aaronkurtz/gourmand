@@ -8,3 +8,5 @@ socket = {{uwsgi_path}}
 env = SECRET_KEY={{django_secret}}
 env = DATABASE_URL={{db_url}}
 env = ALLOWED_HOSTS={{allowed_hosts}}
+{% if debug %}env = DEBUG=True
+py-autoreload = 1{% endif %}
