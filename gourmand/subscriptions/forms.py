@@ -41,7 +41,8 @@ class ImportOPMLForm(UserKwargModelFormMixin, forms.Form):
         if opml_file.size > MAX_OPML_FILE_SIZE:
             raise forms.ValidationError('Your OPML file was too large: %(size)s', code="too_large", params={'size': opml_file.size})
         if opml_file.content_type not in OPML_CONTENT_TYPES:
-            raise forms.ValidationError('The file was not a valid OPML file: %(content_type)s', code="invalid", params={'content_type': opml_file.content_type})
+            raise forms.ValidationError('The file was not a valid OPML file: %(content_type)s',
+                                        code="invalid", params={'content_type': opml_file.content_type})
         opml_contents = opml_file.read()
         try:
             opml = fromstring(opml_contents, forbid_dtd=True)
