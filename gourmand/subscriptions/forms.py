@@ -28,6 +28,12 @@ class NewSubForm(UserKwargModelFormMixin, forms.Form):
             return cleaned_data
         fp = feedparser.parse(url)
         feed = Feed.objects.create_from_feed(fp)
+        if feed.href != url:
+            if Subscription.objects.filter(owner=self.user, feed__href=feed.href).exists():
+                raise forms.ValidationError("You are already subscribed to %(url)s", code="already_subscribed", params={'url': feed.href})
+            if Feed.objects.filter(href=feed.href).exists():
+                cleaned_data['feed'] = Feed.objects.get(href=feed.href)
+                return cleaned_data
         feed.save()
         feed.update(fp)
         cleaned_data['feed'] = feed
