@@ -86,12 +86,13 @@ class ImportOPML(LoginRequiredMixin, UserFormKwargsMixin, FormView):
     def form_valid(self, form):
         feeds = form.cleaned_data['feeds']
         # TODO Do this in an async task
-        urls = [f.get('xmlUrl', None) for f in feeds]
         c = Counter()
-        for url in urls:
-            if Subscription.objects.filter(owner=self.request.user, feed__href=url).exists():
-                c['sub_exists'] += 1
-                continue
+        urls = {f.get('xmlUrl', None) for f in feeds}
+        existing_subscriptions = Subscription.objects.filter(owner=self.request.user, feed__href__in=urls)
+        existing_urls = set(existing_subscriptions.values_list('feed__href', flat=True))
+        fresh_urls = urls - existing_urls
+        c['sub_exists'] = len(existing_urls)
+        for url in fresh_urls:
             if not Feed.objects.filter(href=url).exists():
                 try:
                     fp = feedparser.parse(url)
