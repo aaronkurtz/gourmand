@@ -1,5 +1,6 @@
 virtualenv_base_path: /srv/virtualenv
 virtualenv_path: /srv/virtualenv/gourmand
 app_path: /srv/gourmand
+django_cache_table: gourmand_cache
 django_secret: supersecret
 allowed_hosts: "*,"

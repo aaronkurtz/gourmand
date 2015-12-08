@@ -33,6 +33,7 @@ THIRD_PARTY_APPS = (
     'django_extensions',
     'bootstrap3',
     'debug_toolbar',
+    'django_q',
 )
 
 LOCAL_APPS = (
@@ -114,3 +115,18 @@ LOGIN_REDIRECT_URL = 'reader'
 
 # Bootstrap3 settings - http://django-bootstrap3.readthedocs.org/en/latest/settings.html
 BOOTSTRAP3 = {'include_jquery': True}
+
+
+# Cache settings
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'gourmand_cache',
+    }
+}
+
+# Django-Q settings
+Q_CLUSTER = {
+    'name': 'DjangoORM',
+    'orm': 'default',
+}

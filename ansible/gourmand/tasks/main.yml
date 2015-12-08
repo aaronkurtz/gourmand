@@ -52,6 +52,16 @@
     SECRET_KEY: "{{django_secret}}"
     DATABASE_URL: "{{db_url}}"
 
+- name: Create Django cache tables
+  django_manage:
+    command=createcachetable
+    cache_table={{ django_cache_table }}
+    app_path={{ app_path }}
+    virtualenv={{ virtualenv_path }}
+  environment:
+    SECRET_KEY: "{{ django_secret }}"
+    DATABASE_URL: "{{ db_url }}"
+
 - name: Enable Gourmand Uwsgi app
   sudo: true
   file: src=/etc/uwsgi/apps-available/gourmand.ini dest=/etc/uwsgi/apps-enabled/gourmand.ini state=link

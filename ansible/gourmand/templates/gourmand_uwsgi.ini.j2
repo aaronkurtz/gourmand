@@ -8,5 +8,6 @@ socket = {{uwsgi_path}}
 env = SECRET_KEY={{django_secret}}
 env = DATABASE_URL={{db_url}}
 env = ALLOWED_HOSTS={{allowed_hosts}}
+attach-daemon = . /srv/virtualenv/gourmand/bin/activate ; /srv/gourmand/manage.py qcluster
 {% if debug %}env = DEBUG=True
 py-autoreload = 1{% endif %}
