@@ -17,6 +17,8 @@ class NewSubForm(UserKwargModelFormMixin, forms.Form):
     feed_url = forms.URLField(max_length=URL_MAX_LEN, label=('Feed URL'))
 
     def clean(self):
+        if 'feed_url' not in self.cleaned_data:
+            return self.cleaned_data
         cleaned_data = super(self.__class__, self).clean()
         url = cleaned_data['feed_url']
         if Subscription.objects.filter(owner=self.user, feed__href=url).exists():
@@ -36,6 +38,8 @@ class ImportOPMLForm(UserKwargModelFormMixin, forms.Form):
     opml_file = forms.FileField(label='OPML File')
 
     def clean(self):
+        if 'opml_file' not in self.cleaned_data:
+            return self.cleaned_data
         cleaned_data = super(self.__class__, self).clean()
         opml_file = cleaned_data['opml_file']
         if opml_file.size > MAX_OPML_FILE_SIZE:
