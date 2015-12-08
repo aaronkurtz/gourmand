@@ -1,5 +1,4 @@
 from collections import Counter
-
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.urlresolvers import reverse_lazy
@@ -9,7 +8,9 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import pluralize
 from django.views.generic import TemplateView, ListView, FormView, View, RedirectView, DetailView, DeleteView
 
+from async_messages import messages as async_messages
 from braces.views import LoginRequiredMixin, UserFormKwargsMixin
+from django_q.tasks import async, async_iter, result
 import feedparser
 
 from feeds.models import Feed
@@ -85,36 +86,55 @@ class ImportOPML(LoginRequiredMixin, UserFormKwargsMixin, FormView):
 
     def form_valid(self, form):
         feeds = form.cleaned_data['feeds']
-        # TODO Do this in an async task
-        c = Counter()
         urls = {f.get('xmlUrl', None) for f in feeds}
         existing_subscriptions = Subscription.objects.filter(owner=self.request.user, feed__href__in=urls)
         existing_urls = set(existing_subscriptions.values_list('feed__href', flat=True))
         fresh_urls = urls - existing_urls
-        c['sub_exists'] = len(existing_urls)
-        for url in fresh_urls:
-            if not Feed.objects.filter(href=url).exists():
-                try:
-                    fp = feedparser.parse(url)
-                    feed = Feed.objects.create_from_feed(fp)
-                    feed.save()
-                    feed.update(fp)
-                except ValidationError:
-                    c['error'] += 1
-                    continue
-            else:
-                feed = Feed.objects.get(href=url)
-            sub = Subscription.objects.create(owner=self.request.user, feed=feed)
-            sub.populate()
-            c['subbed'] += 1
-        if c['subbed']:
-            messages.success(self.request, "You subscribed to {sub} feed{s}.".format(sub=c['subbed'], s=pluralize(c['subbed'])))
-        if c['error']:
-            messages.error(self.request, "There were errors importing {error} feed{s}.".format(error=c['error'], s=pluralize(c['error'])))
-        if c['sub_exists']:
+        num_existing = len(existing_urls)
+        num_fresh = len(fresh_urls)
+        if fresh_urls:
+            async(import_urls, self.request.user, fresh_urls)
+        if num_fresh:
+            messages.success(self.request, "You imported {sub} feed{s} - processing now.".format(sub=num_fresh, s=pluralize(num_fresh)))
+        if num_existing:
             messages.info(self.request,
-                          "You were already subscribed to {sub_exists} feed{s}.".format(sub_exists=c['sub_exists'], s=pluralize(c['sub_exists'])))
+                          "You were already subscribed to {sub_exists} feed{s}.".format(sub_exists=num_existing, s=pluralize(num_existing)))
         return super(self.__class__, self).form_valid(form)
+
+
+def import_urls(user, fresh_urls):
+    result_id = async_iter(subscribe_to_imported_url, [(user, url) for url in fresh_urls], timeout=30)
+    import_results = Counter(result(result_id, -1))
+    print("Results", import_results)
+    added = import_results['added']
+    existed = import_results['existed']
+    errors = import_results['errors']
+    async_messages.success(user, "Import complete - you subscribed to {sub} feed{s}.".format(sub=added, s=pluralize(added)))
+    if existed:
+        async_messages.info(user,
+                            "You were already subscribed to {sub_exists} imported feed{s}.".format(sub_exists=existed, s=pluralize(existed)))
+    if errors:
+        async_messages.error(user, "There was an error subscribing to {errors} imported feed{s}.".format(errors=errors, s=pluralize(errors)))
+
+
+def subscribe_to_imported_url(user, url):
+    try:
+        try:
+            feed = Feed.objects.get(href=url)
+        except Feed.DoesNotExist:
+            fp = feedparser.parse(url)
+            feed = Feed.objects.create_from_feed(fp)
+            feed.full_clean()
+            feed.save()
+            feed.update(fp)
+        sub, created = Subscription.objects.get_or_create(owner=user, feed=feed)
+        sub.populate()
+        if created:
+            return('added')
+        else:
+            return('existed')
+    except ValidationError:
+        return('error')
 
 
 class ExportOPML(LoginRequiredMixin, View):

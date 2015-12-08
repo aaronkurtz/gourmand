@@ -5,6 +5,7 @@ Django < 1.9
 psycopg2
 
 # Django Third-Party
+django-async-messages
 django-bootstrap3
 django-braces
 django-debug-toolbar
