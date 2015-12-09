@@ -18,6 +18,6 @@ class ArticleList(ListView):
         return Article.objects.filter(feed=self.feed).order_by('when')
 
     def get_context_data(self, **kwargs):
-        context = super(self.__class__, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['feed'] = self.feed
         return context

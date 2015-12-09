@@ -44,7 +44,7 @@ class PersonalArticleList(LoginRequiredMixin, ListView):
         return PersonalArticle.objects.filter(sub=self.sub).select_related('article').order_by('article__when')
 
     def get_context_data(self, **kwargs):
-        context = super(self.__class__, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['sub'] = self.sub
         return context
 
@@ -59,7 +59,7 @@ class AddSubscription(LoginRequiredMixin, UserFormKwargsMixin, FormView):
         sub = Subscription.objects.create(owner=self.request.user, feed=feed)
         sub.populate()
         messages.success(self.request, "You have subscribed to <strong>{feed}</strong>".format(feed=feed.title))
-        return super(self.__class__, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class RemoveSubscription(LoginRequiredMixin, DeleteView):
@@ -67,7 +67,7 @@ class RemoveSubscription(LoginRequiredMixin, DeleteView):
         return Subscription.objects.filter(owner=self.request.user).select_related('feed')
 
     def get_object(self, queryset=None):
-        obj = super(self.__class__, self).get_object(queryset)
+        obj = super().get_object(queryset)
         self.title = obj.feed.title
         return obj
 
@@ -96,7 +96,7 @@ class ImportOPML(LoginRequiredMixin, UserFormKwargsMixin, FormView):
         if num_existing:
             messages.info(self.request,
                           "You were already subscribed to {sub_exists} feed{s}.".format(sub_exists=num_existing, s=pluralize(num_existing)))
-        return super(self.__class__, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class ExportOPML(LoginRequiredMixin, View):
@@ -126,7 +126,7 @@ class ArticleReader(LoginRequiredMixin, DetailView):
         return PersonalArticle.objects.filter(sub__owner=self.request.user).select_related('article', 'sub', 'sub__feed')
 
     def get_object(self, queryset=None):
-        obj = super(self.__class__, self).get_object(queryset)
+        obj = super().get_object(queryset)
         obj.active = False
         obj.save()
         return obj
