@@ -1,0 +1,4 @@
+uses:
+    - django
+requirements:
+    - gourmand/requirements.txt
