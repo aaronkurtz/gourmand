@@ -74,7 +74,10 @@ class Feed(models.Model):
 
     def get_parsed(self):
         headers = {'User-Agent': USER_AGENT, 'If-None-Match': self.etag, 'If-Modified-Since': self.last_modified}
-        r = requests.get(self.href, timeout=FEED_GET_TIMEOUT, headers=headers)
+        try:
+            r = requests.get(self.href, timeout=FEED_GET_TIMEOUT, headers=headers)
+        except requests.exceptions.RequestException:
+            raise ValidationError('Unable to retrieve %(url)s', code='connection_error', params={'url': self.href})
         if r.status_code == 304:
             return None
         self.etag = r.headers.get('ETag', '')
