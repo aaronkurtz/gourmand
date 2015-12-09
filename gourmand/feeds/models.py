@@ -15,6 +15,8 @@ from feeds.utils import tzd, chain_gets
 URL_MAX_LEN = 2048
 FEED_GET_TIMEOUT = 10
 
+USER_AGENT = feedparser.USER_AGENT
+
 logger = logging.getLogger(__name__)
 
 
@@ -26,7 +28,7 @@ class FeedManager(models.Manager):
         if Feed.objects.filter(href=url).exists():
             return Feed.objects.get(href=url)
         try:
-            r = requests.get(url, timeout=FEED_GET_TIMEOUT)
+            r = requests.get(url, timeout=FEED_GET_TIMEOUT, headers={'User-Agent': USER_AGENT})
         except requests.exceptions.RequestException:
             raise ValidationError('Unable to retrieve %(url)s', code='connection_error', params={'url': url})
         new_url = r.url
@@ -34,10 +36,13 @@ class FeedManager(models.Manager):
             return Feed.objects.get(href=r.url)
 
         fp = feedparser.parse(r.content)
-        feed = self.create_from_feed(parsed_feed=fp, href=new_url)
+        fp['href'] = new_url
+        feed = self.create_from_feed(parsed_feed=fp)
+        feed.etag = r.headers.get('ETag', '')
+        feed.last_modified = r.headers.get('Last-Modified', '')
         feed.full_clean()
         feed.save()
-        feed.update(parsed_feed=fp, href=new_url)
+        feed.update(parsed_feed=fp)
         return feed
 
     def create_from_feed(self, parsed_feed, href=None):
@@ -59,6 +64,8 @@ class Feed(models.Model):
     href = models.URLField(max_length=URL_MAX_LEN, unique=True, verbose_name="HREF")
     link = models.URLField(max_length=URL_MAX_LEN, blank=True)
     title = models.TextField()
+    etag = models.TextField(editable=False, blank=True, default='')
+    last_modified = models.TextField(editable=False, blank=True, default='')
 
     objects = FeedManager()
 
@@ -66,27 +73,33 @@ class Feed(models.Model):
         return self.href
 
     def get_parsed(self):
-        # TODO handle ETags, Last-Modified
-        parsed_feed = feedparser.parse(self.href)
-        return parsed_feed
+        headers = {'User-Agent': USER_AGENT, 'If-None-Match': self.etag, 'If-Modified-Since': self.last_modified}
+        r = requests.get(self.href, timeout=FEED_GET_TIMEOUT, headers=headers)
+        if r.status_code == 304:
+            return None
+        self.etag = r.headers.get('ETag', '')
+        self.last_modified = r.headers.get('Last-Modified', '')
+        self.save()
+        fp = feedparser.parse(r.content)
+        fp['href'] = r.url
+        return fp
 
-    def update(self, parsed_feed=None, href=None):
-        # TODO handle ETags, Last-Modified
+    def update(self, parsed_feed=None):
         if not parsed_feed:
             parsed_feed = self.get_parsed()
-        href = parsed_feed.get('href', href)  # Use Feedparser's HREF if available, otherwise use argument
-        if not href:
-            raise ValidationError('HREF not found - unable to create feed', code='missing_href', params={})
+            if not parsed_feed:
+                return
         if parsed_feed.version == '':
-            raise ValidationError('Version not found - unable to find proper RSS/Atom feed at %(href)s', code='invalid', params={'href': href})
+            raise ValidationError('Version not found - unable to find proper RSS/Atom feed at %(href)s', code='invalid', params={'href': parsed_feed.href})
+        # TODO handle updated feeds
         for entry in parsed_feed.entries:
             try:
                 article = Article.objects.create_from_entry(entry)
             except Exception as e:
-                logger.error('Unable to update feed {} - {}'.format(self.href, e))
+                logger.error('Unable to create article from feed {} - {}'.format(self.href, e))
                 return
-            # TODO handle updated feeds
             if not Article.objects.filter(feed=self, gid=article.gid).exists():
+                # TODO handle updated article
                 article.feed = self
                 article.save()
 
