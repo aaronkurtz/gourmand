@@ -13,7 +13,7 @@ import requests
 from feeds.utils import tzd, chain_gets
 
 URL_MAX_LEN = 2048
-FEED_GET_TIMEOUT = 10
+FEED_GET_TIMEOUT = 31
 
 USER_AGENT = feedparser.USER_AGENT
 
