@@ -25,7 +25,10 @@ class FeedManager(models.Manager):
         '''
         if Feed.objects.filter(href=url).exists():
             return Feed.objects.get(href=url)
-        r = requests.get(url, timeout=FEED_GET_TIMEOUT)
+        try:
+            r = requests.get(url, timeout=FEED_GET_TIMEOUT)
+        except requests.exceptions.RequestException:
+            raise ValidationError('Unable to retrieve %(url)s', code='connection_error', params={'url': url})
         new_url = r.url
         if url != new_url and Feed.objects.filter(href=new_url).exists():
             return Feed.objects.get(href=r.url)
