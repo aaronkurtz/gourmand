@@ -18,6 +18,7 @@ whitenoise
 defusedxml
 feedparser
 python-dateutil
+requests
 
 # Developer Requirements
 ipython
