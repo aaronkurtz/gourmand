@@ -6,16 +6,37 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 
-import feedparser
 import dateutil.parser
+import feedparser
+import requests
 
 from feeds.utils import tzd, chain_gets
 
 URL_MAX_LEN = 2048
+FEED_GET_TIMEOUT = 10
+
 logger = logging.getLogger(__name__)
 
 
 class FeedManager(models.Manager):
+    def get_feed(self, url):
+        '''
+        Takes a URL and creates or retrieves the corresponding feed.
+        '''
+        if Feed.objects.filter(href=url).exists():
+            return Feed.objects.get(href=url)
+        r = requests.get(url, timeout=FEED_GET_TIMEOUT)
+        new_url = r.url
+        if url != new_url and Feed.objects.filter(href=new_url).exists():
+            return Feed.objects.get(href=r.url)
+
+        fp = feedparser.parse(r.content)
+        feed = self.create_from_feed(parsed_feed=fp, href=new_url)
+        feed.full_clean()
+        feed.save()
+        feed.update(parsed_feed=fp, href=new_url)
+        return feed
+
     def create_from_feed(self, parsed_feed, href=None):
         '''
         Create and return a Feed object from a FeedParserDict

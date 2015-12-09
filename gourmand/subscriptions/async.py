@@ -8,13 +8,10 @@ from async_messages import messages as async_messages
 from django_q.humanhash import uuid
 from django_q.tasks import result_group, async, count_group, delete_group
 from django_q.conf import logger
-import feedparser
-import requests
 
 from feeds.models import Feed
 from .models import Subscription
 
-FEED_GET_TIMEOUT = 10
 IMPORT_WAIT = 2 * 60
 
 
@@ -54,26 +51,10 @@ def import_urls(user, fresh_urls):
 
 def subscribe_to_imported_url(user, url):
     try:
-        if Feed.objects.filter(href=url).exists():
-            feed = Feed.objects.get(href=url)
-        else:
-            try:
-                r = requests.get(url, timeout=FEED_GET_TIMEOUT)
-            except requests.exceptions.RequestException:
-                return('error')
-            new_url = r.url
-
-            if url != new_url and Feed.objects.filter(href=new_url).exists():
-                feed = Feed.objects.get(href=r.url)
-            else:
-                fp = feedparser.parse(r.content)
-                feed = Feed.objects.create_from_feed(parsed_feed=fp, href=new_url)
-                feed.full_clean()
-                feed.save()
-                feed.update(parsed_feed=fp, href=new_url)
+        feed = Feed.objects.get_feed(url)
         sub, created = Subscription.objects.get_or_create(owner=user, feed=feed)
-        sub.populate()
         if created:
+            sub.populate()
             return('added')
         else:
             return('existed')
