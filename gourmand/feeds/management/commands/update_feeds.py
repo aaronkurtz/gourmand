@@ -13,14 +13,14 @@ class Command(BaseCommand):
         update_len = to_update_qs.count()
         for idx, feed in enumerate(to_update_qs, 1):
             if self.verbosity > 1:
-                print('{} of {}: Updating {} at {}'.format(idx, update_len, feed.title, feed.href))
+                self.stdout.write('{} of {}: Updating {} at {}'.format(idx, update_len, feed.title, feed.href))
             try:
                 feed.update()
                 for sub in feed.subscription_set.all():
                     sub.populate()
             except ValidationError as e:
                 if self.verbosity:
-                    print('Error updating {}: {}'.format(feed.href, e))
+                    self.stderr.write('Error updating {}: {}'.format(feed.href, e))
             except Exception as e:
-                print('FATAL ERROR updating {}: {}'.format(feed.href, e))
+                self.stderr.write('FATAL ERROR updating {}: {}'.format(feed.href, e))
                 raise e
