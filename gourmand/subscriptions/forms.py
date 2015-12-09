@@ -3,7 +3,6 @@ from django import forms
 from braces.forms import UserKwargModelFormMixin
 from defusedxml import DefusedXmlException
 from defusedxml.cElementTree import fromstring
-import feedparser
 
 from feeds.models import Feed, URL_MAX_LEN
 from subscriptions.models import Subscription
@@ -23,19 +22,10 @@ class NewSubForm(UserKwargModelFormMixin, forms.Form):
         url = cleaned_data['feed_url']
         if Subscription.objects.filter(owner=self.user, feed__href=url).exists():
             raise forms.ValidationError("You are already subscribed to %(url)s", code="already_subscribed", params={'url': url})
-        if Feed.objects.filter(href=url).exists():
-            cleaned_data['feed'] = Feed.objects.get(href=url)
-            return cleaned_data
-        fp = feedparser.parse(url)
-        feed = Feed.objects.create_from_feed(fp)
+        feed = Feed.objects.get_feed(url)
         if feed.href != url:
             if Subscription.objects.filter(owner=self.user, feed__href=feed.href).exists():
                 raise forms.ValidationError("You are already subscribed to %(url)s", code="already_subscribed", params={'url': feed.href})
-            if Feed.objects.filter(href=feed.href).exists():
-                cleaned_data['feed'] = Feed.objects.get(href=feed.href)
-                return cleaned_data
-        feed.save()
-        feed.update(fp)
         cleaned_data['feed'] = feed
         return cleaned_data
 
