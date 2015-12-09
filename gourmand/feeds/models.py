@@ -99,7 +99,7 @@ class Feed(models.Model):
             try:
                 article = Article.objects.create_from_entry(entry)
             except Exception as e:
-                logger.error('Unable to create article from feed {} - {}'.format(self.href, e))
+                logger.error('Unable to create article from feed %(href)s - %(e)s', {'href': self.href, 'e': e})
                 return
             if not Article.objects.filter(feed=self, gid=article.gid).exists():
                 # TODO handle updated article

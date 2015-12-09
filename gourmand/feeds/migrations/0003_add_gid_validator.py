@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='article',
             name='gid',
-            field=models.TextField(verbose_name='Global Identifier', validators=[django.core.validators.MinLengthValidator(1, message='GID can not be blank')]),
+            field=models.TextField(verbose_name='Global Identifier',
+                                   validators=[django.core.validators.MinLengthValidator(1, message='GID can not be blank')]),
         ),
     ]

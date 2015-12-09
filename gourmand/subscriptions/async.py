@@ -44,7 +44,7 @@ def import_urls(user, fresh_urls):
                             "You were already subscribed to {sub_exists} imported feed{s}.".format(sub_exists=num_existed, s=pluralize(num_existed)))
     if num_errors:
         async_messages.error(user, "There was an error subscribing to {errors} imported feed{s}.".format(errors=num_errors, s=pluralize(num_errors)))
-    logger.info('User %(user)s OPML import complete - %(results)s' % {'user': user, 'results': pretty_results})
+    logger.info('User %(user)s OPML import complete - %(results)s', {'user': user, 'results': pretty_results})
     delete_group(group, tasks=True)
     return pretty_results
 
