@@ -1,3 +1,7 @@
+import io
+
+from django.core.management import call_command
+
 # http://stackoverflow.com/a/4766400/173957
 
 tz_str = '''-12 Y
@@ -52,3 +56,10 @@ def chain_gets(variable, attributes):
         test = variable.get(name, None)
         if test:
             return test
+
+
+def update_feeds():
+    output = io.StringIO()
+    call_command('update_feeds', verbosity=2, stdout=output)
+    output.seek(0)
+    return output.read()
