@@ -103,11 +103,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+BASE_STATIC = BASE_DIR.path('static')
+
 STATICFILES_DIRS = (
-    BASE_DIR('static_files'),
+    BASE_STATIC('static_files'),
 )
-STATIC_ROOT = BASE_DIR('static')
-WHITENOISE_ROOT = BASE_DIR('root_files')
+STATIC_ROOT = BASE_STATIC('collected_files')
+WHITENOISE_ROOT = BASE_STATIC('root_files')
 
 
 # Authentication
