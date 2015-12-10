@@ -6,7 +6,7 @@ cache:
     directories:
         - $HOME/.cache/pip
 env:
-    - SECRET_KEY=traviscikey DATABASE_URL=postgres://postgres@localhost/gourmandci ALLOWED_HOSTS="*,"
+    - CACHE_URL=dbcache://gourmand_cache SECRET_KEY=traviscikey DATABASE_URL=postgres://postgres@localhost/gourmandci ALLOWED_HOSTS="*,"
 services:
     - postgresql
 install:
