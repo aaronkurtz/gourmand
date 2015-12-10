@@ -120,10 +120,7 @@ BOOTSTRAP3 = {'include_jquery': True}
 
 # Cache settings
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'gourmand_cache',
-    }
+    'default': env.cache(),
 }
 
 # Django-Q settings

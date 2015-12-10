@@ -1,5 +1,6 @@
 #!/bin/bash
 export SECRET_KEY={{django_secret}}
 export DATABASE_URL={{db_url}}
+export CACHE_URL={{ django_cache_url }}
 export ALLOWED_HOSTS={{allowed_hosts}}
 {% if debug %}export DEBUG=True{% endif %}

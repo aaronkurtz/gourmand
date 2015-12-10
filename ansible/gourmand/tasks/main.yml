@@ -34,15 +34,6 @@
   sudo: true
   template: src=gourmand.sh.j2 dest=/etc/profile.d/gourmand.sh owner=root group=root mode=0775
 
-- name: Collect Django static files
-  django_manage:
-    command=collectstatic
-    app_path={{app_path}}
-    virtualenv={{virtualenv_path}}
-  environment:
-    SECRET_KEY: "{{django_secret}}"
-    DATABASE_URL: "{{db_url}}"
-
 - name: Apply Django migrations
   django_manage:
     command=migrate
@@ -51,6 +42,7 @@
   environment:
     SECRET_KEY: "{{django_secret}}"
     DATABASE_URL: "{{db_url}}"
+    CACHE_URL: "{{ django_cache_url }}"
 
 - name: Create Django cache tables
   django_manage:
@@ -61,6 +53,17 @@
   environment:
     SECRET_KEY: "{{ django_secret }}"
     DATABASE_URL: "{{ db_url }}"
+    CACHE_URL: "{{ django_cache_url }}"
+
+- name: Collect Django static files
+  django_manage:
+    command=collectstatic
+    app_path={{app_path}}
+    virtualenv={{virtualenv_path}}
+  environment:
+    SECRET_KEY: "{{django_secret}}"
+    DATABASE_URL: "{{db_url}}"
+    CACHE_URL: "{{ django_cache_url }}"
 
 - name: Enable Gourmand Uwsgi app
   sudo: true
