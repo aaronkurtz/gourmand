@@ -4,7 +4,6 @@
   "short_name": "Gourmand",
   "start_url": "./reader/?homescreen=true",
   "display": "standalone",
-  "orientation": "any",
   "icons": [
         {
                 "src": "/android-chrome-36x36.png",
