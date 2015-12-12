@@ -1,6 +1,7 @@
 """
 Django settings for gourmand project.
 """
+import os
 
 import environ
 
@@ -129,6 +130,7 @@ CACHES = {
 Q_CLUSTER = {
     'name': 'DjangoORM',
     'orm': 'default',
+    'workers': 1 + os.cpu_count() * 2,
     'retry': 600,
     'timeout': 300,
 }

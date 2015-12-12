@@ -8,7 +8,7 @@ from feeds.models import Feed, URL_MAX_LEN
 from subscriptions.models import Subscription
 
 MAX_OPML_FILE_SIZE = 1024 * 1024 * 2
-OPML_CONTENT_TYPES = ('application/xml', 'text/xml', 'text/x-opml', 'text/x-opml+xml')
+OPML_CONTENT_TYPES = ('application/xml', 'text/xml', 'text/x-opml', 'text/x-opml+xml', 'application/xml+opml')
 OPML_FILE_EXTS = ('xml', 'opml')
 
 

@@ -9,9 +9,13 @@ env:
     - CACHE_URL=dbcache://gourmand_cache SECRET_KEY=traviscikey DATABASE_URL=postgres://postgres@localhost/gourmandci ALLOWED_HOSTS="*,"
 services:
     - postgresql
+before_install:
+    - pip install codecov
 install:
     - "pip install -r gourmand/requirements.txt"
 before_script:
     - psql -c 'create database gourmandci;' -U postgres
 script:
-    - cd gourmand && python manage.py migrate && python manage.py test
+    - cd gourmand && python manage.py migrate && coverage run --source='.' ./manage.py test
+after_success:
+    - codecov
