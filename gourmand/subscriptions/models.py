@@ -4,10 +4,22 @@ from django.conf import settings
 from feeds.models import Feed, Article
 
 
+class Category(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    order = models.PositiveSmallIntegerField()
+    name = models.TextField()
+
+    class Meta:
+        unique_together = (('owner', 'name'), ('owner', 'order'))
+        ordering = ('order',)
+        verbose_name_plural = 'categories'
+
+
 class Subscription(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     feed = models.ForeignKey(Feed)
     public = models.BooleanField(default=True)
+    category = models.ForeignKey(Category, null=True, blank=True, default=None)
 
     class Meta:
         unique_together = ('owner', 'feed')
