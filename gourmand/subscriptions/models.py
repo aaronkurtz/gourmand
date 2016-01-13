@@ -14,6 +14,9 @@ class Category(models.Model):
         ordering = ('order',)
         verbose_name_plural = 'categories'
 
+    def __str__(self):
+        return u"{} [{}]: {}".format(self.owner, self.order, self.name)
+
 
 class Subscription(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
