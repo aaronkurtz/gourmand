@@ -19,7 +19,7 @@ class Subscription(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     feed = models.ForeignKey(Feed)
     public = models.BooleanField(default=True)
-    category = models.ForeignKey(Category, null=True, blank=True, default=None)
+    category = models.ForeignKey(Category, related_name='subs')
 
     class Meta:
         unique_together = ('owner', 'feed')
