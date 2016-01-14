@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
-from django.db.models import Count
+from django.db.models import Count, Max
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.template.defaultfilters import pluralize
@@ -64,7 +64,16 @@ class AddSubscription(LoginRequiredMixin, UserFormKwargsMixin, FormView):
 
     def form_valid(self, form):
         feed = form.cleaned_data['feed']
-        sub = Subscription.objects.create(owner=self.request.user, feed=feed)
+        existing_category = form.cleaned_data['existing_category']
+        new_category = form.cleaned_data['new_category']
+        if existing_category:
+            category = existing_category
+        elif new_category:
+            max_order = Category.objects.filter(owner=self.request.user).aggregate(Max('order'))['order__max']
+            category = Category.objects.create(owner=self.request.user, name=new_category, order=max_order+1)
+        else:
+            category = Category.objects.get(owner=self.request.user, name='Uncategorized')
+        sub = Subscription.objects.create(owner=self.request.user, feed=feed, category=category)
         sub.populate()
         messages.success(self.request, "You have subscribed to <strong>{feed}</strong>".format(feed=feed.title))
         return super().form_valid(form)
