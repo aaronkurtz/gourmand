@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
-from django.db.models import Count
+from django.db.models import Count, Max, Case, When
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.template.defaultfilters import pluralize
 from django.views.generic import TemplateView, ListView, FormView, View, RedirectView, DetailView, DeleteView
 
@@ -12,26 +12,48 @@ from django_q.tasks import async
 
 from .async import import_urls
 from .forms import NewSubForm, ImportOPMLForm
-from .models import Subscription, PersonalArticle
+from .models import Subscription, PersonalArticle, Category
 from .utils import create_opml
 
 
 class FrontPage(TemplateView):
     template_name = "index.html"
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return redirect('reader')
+        return super().dispatch(request, *args, **kwargs)
 
-class Reader(LoginRequiredMixin, ListView):
+
+class Reader(LoginRequiredMixin, TemplateView):
     template_name = "reader.html"
 
-    def get_queryset(self):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         subs = Subscription.objects.filter(owner=self.request.user).select_related('feed')
+        active_cat = self.request.GET.get('cat', None)
+        if active_cat:
+            try:
+                category = Category.objects.get(owner=self.request.user, name=active_cat)
+                active_cat = category.id
+                subs = subs.filter(category=category)
+            except Category.DoesNotExist:
+                active_cat = None
+
+        context['active_cat'] = active_cat
+        context['unread_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user, active=True).count()
+        categories = Category.objects.get_user_categories(self.request.user).order_by('-order')
+        # FIXME N+1 query
+        for cat in categories:
+            cat.unread = Subscription.objects.filter(category=cat).aggregate(unread=Count(Case(When(personalarticle__active=True, then=1))))['unread']
+        context['categories'] = categories
         # Extra modifier is required to annotate unread as well as articles
         # Conditional Count in 1.8 works, but breaks if combined with another Count, despite using distinct=True
-        subs = subs.annotate(articles=Count('feed__article')).\
-            extra(select={'unread': 'SELECT COUNT(*) FROM subscriptions_personalarticle WHERE ' +
-                          'subscriptions_subscription.id = subscriptions_personalarticle.sub_id AND active IS TRUE'})
-        subs = subs.order_by('feed__title')
-        return subs
+        subs = subs.order_by('feed__title').annotate(articles=Count('feed__article')).extra(
+            select={'unread': 'SELECT COUNT(*) FROM subscriptions_personalarticle WHERE ' +
+                    'subscriptions_subscription.id = subscriptions_personalarticle.sub_id AND active IS TRUE'})
+        context['subs'] = subs
+        return context
 
 
 class PersonalArticleList(LoginRequiredMixin, ListView):
@@ -56,7 +78,16 @@ class AddSubscription(LoginRequiredMixin, UserFormKwargsMixin, FormView):
 
     def form_valid(self, form):
         feed = form.cleaned_data['feed']
-        sub = Subscription.objects.create(owner=self.request.user, feed=feed)
+        existing_category = form.cleaned_data['existing_category']
+        new_category = form.cleaned_data['new_category']
+        if existing_category:
+            category = existing_category
+        elif new_category:
+            max_order = Category.objects.filter(owner=self.request.user).aggregate(Max('order'))['order__max']
+            category = Category.objects.create(owner=self.request.user, name=new_category, order=max_order+1)
+        else:
+            category = Category.objects.get(owner=self.request.user, name='Uncategorized')
+        sub = Subscription.objects.create(owner=self.request.user, feed=feed, category=category)
         sub.populate()
         messages.success(self.request, "You have subscribed to <strong>{feed}</strong>".format(feed=feed.title))
         return super().form_valid(form)

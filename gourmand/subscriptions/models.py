@@ -4,10 +4,37 @@ from django.conf import settings
 from feeds.models import Feed, Article
 
 
+class CategoryManager(models.Manager):
+    def get_user_categories(self, user):
+        categories = super().get_queryset().filter(owner=user)
+        if categories:
+            return categories
+        else:
+            Category.objects.create(owner=user, order=0, name="Uncategorized")
+            return super().get_queryset().filter(owner=user)
+
+
+class Category(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    order = models.PositiveSmallIntegerField()
+    name = models.TextField()
+
+    objects = CategoryManager()
+
+    class Meta:
+        unique_together = (('owner', 'name'), ('owner', 'order'))
+        ordering = ('order',)
+        verbose_name_plural = 'categories'
+
+    def __str__(self):
+        return u"{} [{}]: {}".format(self.owner, self.order, self.name)
+
+
 class Subscription(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     feed = models.ForeignKey(Feed)
     public = models.BooleanField(default=True)
+    category = models.ForeignKey(Category, related_name='subs')
 
     class Meta:
         unique_together = ('owner', 'feed')

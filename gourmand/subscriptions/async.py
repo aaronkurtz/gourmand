@@ -10,7 +10,7 @@ from django_q.tasks import result_group, async, count_group, delete_group
 from django_q.conf import logger
 
 from feeds.models import Feed
-from .models import Subscription
+from .models import Subscription, Category
 
 IMPORT_WAIT = 2 * 60
 
@@ -52,7 +52,8 @@ def import_urls(user, fresh_urls):
 def subscribe_to_imported_url(user, url):
     try:
         feed = Feed.objects.get_feed(url)
-        sub, created = Subscription.objects.get_or_create(owner=user, feed=feed)
+        category = Category.objects.get_user_categories(user).get(name="Uncategorized")
+        sub, created = Subscription.objects.get_or_create(owner=user, feed=feed, category=category)
         if created:
             sub.populate()
             return('added')

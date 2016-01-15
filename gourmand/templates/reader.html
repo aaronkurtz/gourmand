@@ -5,20 +5,39 @@
 
 {% block content %}
 <div class="container">
-<a class="btn btn-primary" href="{% url 'add_subscription' %}">Add Feed</a>
-<a class="btn btn-primary" href="{% url 'import_opml' %}">Import OPML</a>
-<a class="btn btn-primary" href="{% url 'export_opml' %}">Export OPML</a>
-<p>
-<ul class="list-group">
-    {% for sub in object_list %}
-        <li class="list-group-item">
-            <a class="btn btn-sm pull-right" href="{% url 'remove_subscription' sub.pk %}">{% bootstrap_icon 'trash' %}</a>
-            <span class="badge">{{ sub.unread }} article{{sub.articles|pluralize}} unread</span>
-            <span class="badge">{{ sub.articles }} article{{sub.articles|pluralize}}</span>
-            <a href="{% url 'read_new' sub.pk %}">{{ sub.feed.title }} - {{ sub.feed.href }}</a>
-        </li>
-    {% endfor %}
-</ul>
-</p>
+    <div class="row">
+        <div class="col-md-4 gourmand-sidebar">
+            <h4>Feeds</h4>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" {% if not active_cat %}class="active"{% endif %}>
+                    <a href="{% url 'reader' %}">All<span class="badge">{{ unread_all }}</span></a>
+                </li>
+                {% for category in categories %}
+                    <li role="presentation" {% if active_cat == category.id %}class="active"{% endif %}>
+                        <a href="{% url 'reader' %}?cat={{ category.name|urlencode }}">{{ category.name }}<span class="badge">{{ category.unread }}</span></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-8 gourmand-main">
+            <p>
+            <a class="btn btn-primary" href="{% url 'add_subscription' %}">Add Feed</a>
+            <a class="btn btn-primary" href="{% url 'import_opml' %}">Import OPML</a>
+            <a class="btn btn-primary" href="{% url 'export_opml' %}">Export OPML</a>
+            </p>
+            <ul class="list-group">
+                {% for sub in subs %}
+                    <li class="list-group-item">
+                        <a class="btn btn-sm pull-right" href="{% url 'remove_subscription' sub.pk %}">{% bootstrap_icon 'trash' %}</a>
+                        <span class="badge">{{ sub.unread }} article{{sub.articles|pluralize}} unread</span>
+                        <span class="badge">{{ sub.articles }} article{{sub.articles|pluralize}}</span>
+                        <a href="{% url 'read_new' sub.pk %}">{{ sub.feed.title }} - {{ sub.feed.href }}</a>
+                    </li>
+                {% empty %}
+                    No subscriptions.
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
 {% endblock content %}
