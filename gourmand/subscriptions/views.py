@@ -30,13 +30,23 @@ class Reader(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        subs = Subscription.objects.filter(owner=self.request.user).select_related('feed')
+        active_cat = self.request.GET.get('cat', None)
+        if active_cat:
+            try:
+                category = Category.objects.get(owner=self.request.user, name=active_cat)
+                active_cat = category.id
+                subs = subs.filter(category=category)
+            except Category.DoesNotExist:
+                active_cat = None
+
+        context['active_cat'] = active_cat
         context['unread_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user, active=True).count()
         categories = Category.objects.get_user_categories(self.request.user).order_by('-order')
         # FIXME N+1 query
         for cat in categories:
             cat.unread = Subscription.objects.filter(category=cat).aggregate(unread=Count(Case(When(personalarticle__active=True, then=1))))['unread']
         context['categories'] = categories
-        subs = Subscription.objects.filter(owner=self.request.user).select_related('feed')
         # Extra modifier is required to annotate unread as well as articles
         # Conditional Count in 1.8 works, but breaks if combined with another Count, despite using distinct=True
         subs = subs.order_by('feed__title').annotate(articles=Count('feed__article')).extra(
