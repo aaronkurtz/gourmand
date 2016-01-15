@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
-from django.db.models import Count, Max
+from django.db.models import Count, Max, Case, When
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.template.defaultfilters import pluralize
@@ -31,7 +31,11 @@ class Reader(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['unread_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user, active=True).count()
-        context['categories'] = Category.objects.get_user_categories(self.request.user).order_by('-order')
+        categories = Category.objects.get_user_categories(self.request.user).order_by('-order')
+        # FIXME N+1 query
+        for cat in categories:
+            cat.unread = Subscription.objects.filter(category=cat).aggregate(unread=Count(Case(When(personalarticle__active=True, then=1))))['unread']
+        context['categories'] = categories
         subs = Subscription.objects.filter(owner=self.request.user).select_related('feed')
         # Extra modifier is required to annotate unread as well as articles
         # Conditional Count in 1.8 works, but breaks if combined with another Count, despite using distinct=True

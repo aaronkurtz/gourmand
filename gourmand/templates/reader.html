@@ -8,13 +8,13 @@
     <div class="row">
         <div class="col-md-4 gourmand-sidebar">
             <h4>Feeds</h4>
-            <ul>
-                <li>
-                    <a href="#">All <span class="badge">{{ unread_all }}</a>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation">
+                    <a href="#">All<span class="badge">{{ unread_all }}</span></a>
                 </li>
                 {% for category in categories %}
-                    <li>
-                        <a href="#">{{ category.name }}</a>
+                    <li role="presentation">
+                        <a href="#">{{ category.name }}<span class="badge">{{ category.unread }}</span></a>
                     </li>
                 {% endfor %}
             </ul>
