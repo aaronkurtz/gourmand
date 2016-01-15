@@ -30,6 +30,7 @@ class Reader(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['unread_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user, active=True).count()
         context['categories'] = Category.objects.get_user_categories(self.request.user).order_by('-order')
         subs = Subscription.objects.filter(owner=self.request.user).select_related('feed')
         # Extra modifier is required to annotate unread as well as articles
