@@ -6,14 +6,12 @@
 <div class="container">
     <a class="btn btn-lg btn-primary" href="{% url 'read_new' personal_article.sub.pk %}">Next</a>
     <a class="btn btn-lg btn-primary" href="{% url 'reader' %}">Reader</a>
-    <h2>{{ personal_article.sub.feed.title }}</h2>
+    <h2 class="maxlen" >{{ personal_article.sub.feed.title }}</h2>
     {% with article=personal_article.article %}
-        <h4><a href="{{ article.main_link }}" target='_blank'>{{ article.title }}</a></h4>
+        <h4 class="maxlen"><a href="{{ article.main_link }}" target='_blank'>{{ article.title }}</a></h4>
         <span class="badge">Published {{ article.when|timesince }} ago</span>
         <div class="article_content">
-            <p>
-                {{ article.main_content|safe }}
-            </p>
+            {{ article.main_content|safe }}
         </div>
     {% endwith %}
 </ul>

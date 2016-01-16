@@ -17,21 +17,26 @@
                 </li>
                 {% for category in categories %}
                     <li role="presentation" {% if active_cat == category.id %}class="active"{% endif %}>
-                        <a href="{% url 'reader' %}?cat={{ category.name|urlencode }}">{{ category.name }}<span class="badge pull-right">{{ category.unread }}</span></a>
+                        <a href="{% url 'reader' %}?cat={{ category.name|urlencode }}">
+                        <span class="badge pull-right">{{ category.unread }}</span>
+                        <div class="maxlen">{{ category.name }}</div>
+                        </a>
                     </li>
                 {% endfor %}
             </ul>
         </div>
         <div class="col-sm-9 gourmand-main">
-            <p class="pull-right visible-xs">
-                <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Categories</button>
-            </p>
-            <h4>Feeds{% if active_cat %} - {{ active_cat_name }}{% endif %}</h4>
+            <div>
+                <p class="pull-right visible-xs">
+                    <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Categories</button>
+                </p>
+                <h4 class="maxlen">Feeds{% if active_cat %} - {{ active_cat_name }}{% endif %}</h4>
+            </div>
             <ul class="list-group">
                 {% for sub in subs %}
                     <li class="list-group-item">
-                        <span class="badge">{{ sub.unread }} article{{sub.unread|pluralize}} unread</span>
-                        <a href="{% url 'read_new' sub.pk %}">{{ sub.feed.title }}</a>
+                        <span class="badge">{{ sub.unread }} <span class="hidden-xs">article{{sub.unread|pluralize}} unread</span></span>
+                        <div class="maxlen"><a href="{% url 'read_new' sub.pk %}">{{ sub.feed.title }}</a></div>
                     </li>
                 {% empty %}
                     No subscriptions.
