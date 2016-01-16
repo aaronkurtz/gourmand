@@ -59,7 +59,7 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="{% url 'add_subscription' %}">Add Feed</a></li>
-                    <li><a href="#">Browse Feeds</a></li>
+                    <li><a href="#"><s>Browse Feeds</s></a></li>
                     <li><a href="{% url 'import_opml' %}">Import Feeds</a></li>
                 </ul>
             </li>
@@ -68,14 +68,14 @@
                     Manage <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Manage Feeds</a></li>
-                    <li><a href="#">Manage Categories</a></li>
+                    <li><a href="#"><s>Manage Feeds</s></a></li>
+                    <li><a href="#"><s>Manage Categories</s></a></li>
                 </ul>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Account</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li><a href="#"><s>Account</s></a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
           </ul>
         {% else %}
           <ul class="nav navbar-nav navbar-right">
