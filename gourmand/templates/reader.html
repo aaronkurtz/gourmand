@@ -6,32 +6,37 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-4 gourmand-sidebar">
-            <h4>Feeds</h4>
+        <div class="col-sm-3 gourmand-sidebar hidden-xs">
+            <p class="pull-right visible-xs">
+                <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Categories</button>
+            </p>
+            <h4>Categories</h4>
             <ul class="nav nav-pills nav-stacked">
                 <li role="presentation" {% if not active_cat %}class="active"{% endif %}>
-                    <a href="{% url 'reader' %}">All<span class="badge">{{ unread_all }}</span></a>
+                    <a href="{% url 'reader' %}">All<span class="badge pull-right">{{ unread_all }}</span></a>
                 </li>
                 {% for category in categories %}
                     <li role="presentation" {% if active_cat == category.id %}class="active"{% endif %}>
-                        <a href="{% url 'reader' %}?cat={{ category.name|urlencode }}">{{ category.name }}<span class="badge">{{ category.unread }}</span></a>
+                        <a href="{% url 'reader' %}?cat={{ category.name|urlencode }}">
+                        <span class="badge pull-right">{{ category.unread }}</span>
+                        <div class="maxlen">{{ category.name }}</div>
+                        </a>
                     </li>
                 {% endfor %}
             </ul>
         </div>
-        <div class="col-md-8 gourmand-main">
-            <p>
-            <a class="btn btn-primary" href="{% url 'add_subscription' %}">Add Feed</a>
-            <a class="btn btn-primary" href="{% url 'import_opml' %}">Import OPML</a>
-            <a class="btn btn-primary" href="{% url 'export_opml' %}">Export OPML</a>
-            </p>
+        <div class="col-sm-9 gourmand-main">
+            <div>
+                <p class="pull-right visible-xs">
+                    <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Categories</button>
+                </p>
+                <h4 class="maxlen">Feeds{% if active_cat %} - {{ active_cat_name }}{% endif %}</h4>
+            </div>
             <ul class="list-group">
                 {% for sub in subs %}
                     <li class="list-group-item">
-                        <a class="btn btn-sm pull-right" href="{% url 'remove_subscription' sub.pk %}">{% bootstrap_icon 'trash' %}</a>
-                        <span class="badge">{{ sub.unread }} article{{sub.articles|pluralize}} unread</span>
-                        <span class="badge">{{ sub.articles }} article{{sub.articles|pluralize}}</span>
-                        <a href="{% url 'read_new' sub.pk %}">{{ sub.feed.title }} - {{ sub.feed.href }}</a>
+                        <span class="badge">{{ sub.unread }} <span class="hidden-xs">article{{sub.unread|pluralize}} unread</span></span>
+                        <div class="maxlen"><a href="{% url 'read_new' sub.pk %}">{{ sub.feed.title }}</a></div>
                     </li>
                 {% empty %}
                     No subscriptions.
@@ -41,3 +46,14 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block footerjs %}
+{{ block.super }}
+<script>
+$(document).ready(function () {
+  $('[data-toggle="offcanvas"]').click(function () {
+    $('.gourmand-sidebar').toggleClass('hidden-xs');
+  });
+});
+</script>
+{% endblock %}

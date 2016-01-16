@@ -1,0 +1,9 @@
+.article_content {
+    word-wrap: break-word;
+}
+
+.maxlen {
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
