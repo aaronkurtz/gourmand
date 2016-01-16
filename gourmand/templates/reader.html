@@ -26,7 +26,7 @@
             <p class="pull-right visible-xs">
                 <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Categories</button>
             </p>
-            <h4>Feeds</h4>
+            <h4>Feeds{% if active_cat %} - {{ active_cat_name }}{% endif %}</h4>
             <ul class="list-group">
                 {% for sub in subs %}
                     <li class="list-group-item">

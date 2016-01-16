@@ -35,6 +35,7 @@ class Reader(LoginRequiredMixin, TemplateView):
         if active_cat:
             try:
                 category = Category.objects.get(owner=self.request.user, name=active_cat)
+                context['active_cat_name'] = category.name
                 active_cat = category.id
                 subs = subs.filter(category=category)
             except Category.DoesNotExist:
