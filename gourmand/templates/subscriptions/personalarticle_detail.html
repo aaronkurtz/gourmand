@@ -8,12 +8,24 @@
     <a class="btn btn-lg btn-primary" href="{% url 'reader' %}">Reader</a>
     <h2>{{ personal_article.sub.feed.title }}</h2>
     {% with article=personal_article.article %}
-        <h4><a href="{{ article.main_link }}">{{ article.title }}</a></h4>
+        <h4><a href="{{ article.main_link }}" target='_blank'>{{ article.title }}</a></h4>
         <span class="badge">Published {{ article.when|timesince }} ago</span>
-        <p>
-        {{ article.main_content|safe }}
-        </p>
+        <div class="article_content">
+            <p>
+                {{ article.main_content|safe }}
+            </p>
+        </div>
     {% endwith %}
 </ul>
 </div>
 {% endblock content %}
+
+{% block footerjs %}
+{{ block.super }}
+<script>
+$(document).ready(function() {
+    $('.article_content img').addClass('img-responsive');
+    $('.article_content a').attr('target', '_blank');
+});
+</script>
+{% endblock footerjs %}
