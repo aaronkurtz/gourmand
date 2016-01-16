@@ -49,7 +49,7 @@ class Reader(LoginRequiredMixin, TemplateView):
         context['categories'] = categories
         # Extra modifier is required to annotate unread as well as articles
         # Conditional Count in 1.8 works, but breaks if combined with another Count, despite using distinct=True
-        subs = subs.order_by('feed__title').annotate(articles=Count('feed__article')).extra(
+        subs = subs.order_by('feed__title').extra(
             select={'unread': 'SELECT COUNT(*) FROM subscriptions_personalarticle WHERE ' +
                     'subscriptions_subscription.id = subscriptions_personalarticle.sub_id AND active IS TRUE'})
         context['subs'] = subs
