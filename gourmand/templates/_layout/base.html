@@ -39,36 +39,73 @@
 </head>
 <body>
 <nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href={% url 'front' %}>Gourmand</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="navbar navbar-nav">
-                {% block navbar %}
-                {% endblock %}
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-            {% if request.user.is_authenticated %}
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'front' %}">Gourmand</a>
+    </div>
+    {% if request.user.is_authenticated %}
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{% url 'reader' %}">Reader</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                    Feeds <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'add_subscription' %}">Add Feed</a></li>
+                    <li><a href="#">Browse Feeds</a></li>
+                    <li><a href="{% url 'import_opml' %}">Import Feeds</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                    Manage <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Manage Feeds</a></li>
+                    <li><a href="#">Manage Categories</a></li>
+                </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">Account</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
-            {% else %}
-                <li><a href="{% url 'login' %}">Login</a></li>
-                <li><a href="#"><s>Sign-up</s></a></li>
-            {% endif %}
+          </ul>
+        {% else %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="#"><s>Sign-up</s></a></li>
+          </ul>
+        {% endif %}
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+{% bootstrap_messages %}
+
+{% block content%}
+{% endblock %}
+
+<footer class="footer">
+    <div class="container">
+        <hr>
+        <div class="text-center">
+            <ul class="list-inline">
+                <li><span class="text-muted">Gourmand © 2015-2016</span></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">FAQ</a></li>
             </ul>
         </div>
     </div>
-</nav>
-{% bootstrap_messages %}
-{% block body %}
-  {% block content%}
-  {% endblock %}
+</footer>
+{% block footerjs %}
+{% bootstrap_javascript %}
+{% endblock footerjs %}
 
-  {% block footerjs %}
-    {% bootstrap_javascript %}
-  {% endblock footerjs %}
-
-{% endblock body%}
 </body>
 </html>
