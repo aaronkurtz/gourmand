@@ -11,7 +11,12 @@ class SubAdmin(admin.ModelAdmin):
 
 @admin.register(PersonalArticle)
 class PersonalArticleAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('sub', 'article', 'active', 'archived')
+    list_display_links = ('sub', 'article')
+    select_related = ('sub', 'article')
+    readonly_fields = ('sub', 'article')
+    fields = ('sub', 'article', ('active', 'archived'))
+    search_fields = ('sub__owner__username', 'sub__feed__href')
 
 
 @admin.register(Category)
