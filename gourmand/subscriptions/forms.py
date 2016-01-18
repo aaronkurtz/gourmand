@@ -19,11 +19,11 @@ class NewSubForm(UserKwargModelFormMixin, forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['existing_category'].queryset = Category.objects.filter(owner=self.user)
+        self.fields['existing_category'].queryset = Category.objects.filter(owner=self.user).exclude(name='Uncategorized').order_by('name')
 
     def clean_new_category(self):
         category = self.cleaned_data['new_category']
-        if category and Category.objects.filter(owner=self.user, name=category):
+        if category and Category.objects.filter(owner=self.user, name=category).exists():
             raise forms.ValidationError("You already have a category named %(name)s", code="category_exists", params={'name': category})
         return category
 

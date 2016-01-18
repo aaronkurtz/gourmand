@@ -23,11 +23,10 @@ class Category(models.Model):
 
     class Meta:
         unique_together = (('owner', 'name'), ('owner', 'order'))
-        ordering = ('order',)
         verbose_name_plural = 'categories'
 
     def __str__(self):
-        return u"{} [{}]: {}".format(self.owner, self.order, self.name)
+        return self.name
 
 
 class Subscription(models.Model):
