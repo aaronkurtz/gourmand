@@ -24,6 +24,7 @@ first==2.0.1              # via pip-tools
 future==0.15.2            # via django-q
 ipython-genutils==0.1.0   # via traitlets
 ipython==4.0.2
+opbeat==3.2
 path.py==8.1.2            # via pickleshare
 pexpect==4.0.1            # via ipython
 pickleshare==0.5          # via ipython
