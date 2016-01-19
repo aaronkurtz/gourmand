@@ -5,7 +5,7 @@ import os
 
 import environ
 
-env = environ.Env(DEBUG=(bool, False), ALLOWED_HOSTS=(list, []))
+env = environ.Env(DEBUG=(bool, False), ALLOWED_HOSTS=(list, []), OPBEAT=(dict, {}))
 
 BASE_DIR = environ.Path(__file__) - 2
 
@@ -35,6 +35,7 @@ THIRD_PARTY_APPS = (
     'bootstrap3',
     'debug_toolbar',
     'django_q',
+    'opbeat.contrib.django',
 )
 
 LOCAL_APPS = (
@@ -45,6 +46,7 @@ LOCAL_APPS = (
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE_CLASSES = (
+    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -134,3 +136,6 @@ Q_CLUSTER = {
     'retry': 600,
     'timeout': 300,
 }
+
+# Opbeat
+OPBEAT = env('OPBEAT')

@@ -20,6 +20,9 @@ feedparser
 python-dateutil
 requests
 
+# Ops
+opbeat
+
 # Developer Requirements
 ipython
 pip-tools
