@@ -64,8 +64,13 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': (BASE_DIR('templates'),),
-        'APP_DIRS': True,
         'OPTIONS': {
+            'loaders': [
+                ('django.template.loaders.cached.Loader', [
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                ]),
+            ],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -75,6 +80,10 @@ TEMPLATES = [
         },
     },
 ]
+
+if DEBUG:  # For quicker development, reload template changes w/o restarting server
+    TEMPLATES[0]['OPTIONS'].pop('loaders', None)
+    TEMPLATES[0]['APP_DIRS'] = True
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
