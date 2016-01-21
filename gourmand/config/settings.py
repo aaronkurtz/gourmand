@@ -95,6 +95,7 @@ DATABASES = {
     'default': env.db(),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
+DATABASES['default']['CONN_MAX_AGE'] = 120
 
 
 # Internationalization
