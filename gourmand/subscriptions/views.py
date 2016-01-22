@@ -31,15 +31,21 @@ class Reader(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         subs = Subscription.objects.filter(owner=self.request.user).select_related('feed')
-        active_cat = self.request.GET.get('cat', None)
-        if active_cat:
-            try:
-                category = Category.objects.get(owner=self.request.user, name=active_cat)
-                context['active_cat_name'] = category.name
-                active_cat = category.id
-                subs = subs.filter(category=category)
-            except Category.DoesNotExist:
-                active_cat = None
+
+        active_cat = None
+        if self.request.GET.get('reset', None):
+            del self.request.session['active_cat']
+        else:
+            active_cat = self.request.GET.get('category', self.request.session.get('active_cat', None))
+            if active_cat:
+                try:
+                    category = Category.objects.get(owner=self.request.user, name=active_cat)
+                    context['active_cat_name'] = category.name
+                    self.request.session['active_cat'] = category.name
+                    active_cat = category.id
+                    subs = subs.filter(category=category)
+                except Category.DoesNotExist:
+                    active_cat = None
 
         context['active_cat'] = active_cat
         context['unread_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user, active=True).count()
