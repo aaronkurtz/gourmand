@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count, Max, Case, When
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import pluralize
 from django.views.generic import TemplateView, ListView, FormView, View, RedirectView, DetailView, DeleteView
 
@@ -14,15 +14,6 @@ from .async import import_urls
 from .forms import NewSubForm, ImportOPMLForm
 from .models import Subscription, PersonalArticle, Category
 from .utils import create_opml
-
-
-class FrontPage(TemplateView):
-    template_name = "index.html"
-
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            return redirect('reader')
-        return super().dispatch(request, *args, **kwargs)
 
 
 class Reader(LoginRequiredMixin, TemplateView):
