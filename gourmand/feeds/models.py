@@ -131,12 +131,12 @@ class ArticleManager(models.Manager):
                 gid = "{}@{}".format(when.timestamp(), gid)
         # TODO Handle multiple contents
         summary = entry.get('summary', None)
-        if summary:
-            main_content = summary
-        else:
-            try:
-                main_content = entry['content'][0].value
-            except KeyError:
+        try:
+            main_content = entry['content'][0].value
+        except KeyError:
+            if summary:
+                main_content = summary
+            else:
                 main_content = title
 
         if entry.get('link', None) is None and 'links' in entry:
