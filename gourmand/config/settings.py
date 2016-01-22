@@ -146,6 +146,7 @@ Q_CLUSTER = {
     'workers': 1 + os.cpu_count() * 2,
     'retry': 600,
     'timeout': 300,
+    'catch_up': False,  # Run missed scheduled tasks only once
 }
 
 # Opbeat
