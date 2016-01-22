@@ -97,7 +97,7 @@ class Feed(models.Model):
         # TODO handle updated feeds
         for entry in parsed_feed.entries:
             try:
-                article = Article.objects.create_from_entry(entry)
+                article, extra_content, extra_links = Article.objects.create_from_entry(entry)
             except Exception as e:
                 logger.error('Unable to create article from feed %(href)s - %(e)s', {'href': self.href, 'e': e})
                 return
@@ -105,6 +105,8 @@ class Feed(models.Model):
                 # TODO handle updated article
                 article.feed = self
                 article.save()
+                ExtraContent.objects.bulk_create([ExtraContent(article=article, content=ec) for ec in extra_content])
+                ExtraLink.objects.bulk_create([ExtraLink(article=article, link=link, title=title) for link, title in extra_links.items()])
 
 
 class ArticleManager(models.Manager):
@@ -129,19 +131,25 @@ class ArticleManager(models.Manager):
             gid = slugify(title)
             if when_unparsed:
                 gid = "{}@{}".format(when.timestamp(), gid)
-        # TODO Handle multiple contents
         summary = entry.get('summary', None)
+        extra_content = ()
         try:
             main_content = entry['content'][0].value
+            extra_content = (ec.value for ec in entry['content'][1:])
         except KeyError:
             if summary:
                 main_content = summary
             else:
                 main_content = title
 
+        extra_links = {}
+        for link in entry['links'] + entry['enclosures']:
+            if link.href != main_link and link.href not in extra_links:
+                extra_links[link.href] = link.get('title', link.href)
+
         if entry.get('link', None) is None and 'links' in entry:
             raise ValidationError("Link not found but links found - unable to save Article", code='missing_link', params={})
-        return Article(when=when, main_link=main_link, title=title, gid=gid, main_content=main_content)
+        return Article(when=when, main_link=main_link, title=title, gid=gid, main_content=main_content), extra_content, extra_links
 
 
 class Article(models.Model):
@@ -165,9 +173,14 @@ class ExtraContent(models.Model):
     article = models.ForeignKey(Article)
     content = models.TextField()
 
+    class Meta:
+        unique_together = ('article', 'content')
+
 
 class ExtraLink(models.Model):
     article = models.ForeignKey(Article)
-    rel = models.TextField()
-    type = models.TextField()
+    title = models.TextField()
     link = models.URLField(max_length=URL_MAX_LEN)
+
+    class Meta:
+        unique_together = ('article', 'link')
