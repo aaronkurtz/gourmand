@@ -23,12 +23,12 @@ feedparser==5.2.1
 first==2.0.1              # via pip-tools
 future==0.15.2            # via django-q
 ipython-genutils==0.1.0   # via traitlets
-ipython==4.0.2
-opbeat==3.2
+ipython==4.0.3
+opbeat==3.2.1
 path.py==8.1.2            # via pickleshare
 pexpect==4.0.1            # via ipython
-pickleshare==0.5          # via ipython
-pip-tools==1.4.4
+pickleshare==0.6          # via ipython
+pip-tools==1.5
 psycopg2==2.6.1
 ptyprocess==0.5           # via pexpect
 python-dateutil==2.4.2
