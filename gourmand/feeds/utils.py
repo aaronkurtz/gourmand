@@ -61,5 +61,4 @@ def chain_gets(variable, attributes):
 def update_feeds():
     output = io.StringIO()
     call_command('update_feeds', verbosity=2, stdout=output)
-    output.seek(0)
-    return output.read()
+    return output.getvalue()
