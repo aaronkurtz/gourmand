@@ -41,6 +41,8 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     'feeds',
     'subscriptions',
+    'branding',
+    'tools',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

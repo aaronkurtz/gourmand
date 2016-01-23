@@ -12,12 +12,20 @@
     <h2 class="article_content" >{{ personal_article.sub.feed.title }}</h2>
     {% with article=personal_article.article %}
         <h4 class="article_content"><a href="{{ article.main_link }}" target='_blank'>{{ article.title }}</a></h4>
+        {% for link in article.extralink_set.all %}
+            <h5 class="article_content"><a href="{{ link.link }}" target='_blank'>{{ link.title }}</a></h5>
+        {% endfor %}
         <span class="badge">Published {{ article.when|timesince }} ago</span>
         <p></p>
         <div class="article_content">
             {{ article.main_content|safe }}
         </div>
         <p></p>
+        {% for ec in article.extracontent_set.all %}
+            <div class="article_content extra_content">
+                {{ ec.content|safe }}
+            </div>
+        {% endfor %}
     {% endwith %}
     <div id="buttons-bottom" class="hidden">
         <a class="btn btn-lg btn-primary" href="{% url 'reader' %}">Reader</a>
