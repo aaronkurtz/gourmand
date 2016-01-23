@@ -114,7 +114,6 @@ class ArticleManager(models.Manager):
         '''
         Create and return an Article object from a FeedParserDict's Entry
         '''
-        # TODO Handle multiple links
         main_link = entry.get('link', '')
         title = chain_gets(entry, ('title', 'link', 'id'))
         if not title:
