@@ -146,8 +146,6 @@ class ArticleManager(models.Manager):
             if link.href != main_link and link.href not in extra_links:
                 extra_links[link.href] = link.get('title', link.href)
 
-        if entry.get('link', None) is None and 'links' in entry:
-            raise ValidationError("Link not found but links found - unable to save Article", code='missing_link', params={})
         return Article(when=when, main_link=main_link, title=title, gid=gid, main_content=main_content), extra_content, extra_links
 
 
