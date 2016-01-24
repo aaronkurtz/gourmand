@@ -1,7 +1,8 @@
+import io
 import logging
 
 from django.core.exceptions import ValidationError
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, URLValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -35,12 +36,16 @@ class FeedManager(models.Manager):
         if url != new_url and Feed.objects.filter(href=new_url).exists():
             return Feed.objects.get(href=r.url)
 
-        fp = feedparser.parse(r.content)
-        fp['href'] = new_url
-        feed = self.create_from_feed(parsed_feed=fp)
-        feed.etag = r.headers.get('ETag', '')
-        feed.last_modified = r.headers.get('Last-Modified', '')
-        feed.full_clean()
+        try:
+            feed_content = io.BytesIO(r.content)
+            feed_content.url = new_url
+            fp = feedparser.parse(feed_content)
+            feed = self.create_from_feed(parsed_feed=fp)
+            feed.etag = r.headers.get('ETag', '')
+            feed.last_modified = r.headers.get('Last-Modified', '')
+            feed.full_clean()
+        except ValidationError:
+            raise ValidationError("Unable to create feed for %(url)s", code="bad_feed", params={'url': url})
         feed.save()
         feed.update(parsed_feed=fp)
         return feed
@@ -55,7 +60,12 @@ class FeedManager(models.Manager):
         if parsed_feed.version == '':
             raise ValidationError('Version not found - unable to find proper RSS/Atom feed at %(href)s', code='invalid', params={'href': href})
         title = parsed_feed.feed.get('title', href)
-        link = parsed_feed.feed.get('link', '')
+        try:
+            link = parsed_feed.feed.get('link', '')
+            validator = URLValidator()
+            validator(link)
+        except ValidationError:
+            link = ''
         feed = Feed(title=title, href=href, link=link)
         return feed
 
@@ -83,8 +93,9 @@ class Feed(models.Model):
         self.etag = r.headers.get('ETag', '')
         self.last_modified = r.headers.get('Last-Modified', '')
         self.save()
-        fp = feedparser.parse(r.content)
-        fp['href'] = r.url
+        feed_content = io.BytesIO(r.content)
+        feed_content.url = r.url
+        fp = feedparser.parse(feed_content)
         return fp
 
     def update(self, parsed_feed=None):

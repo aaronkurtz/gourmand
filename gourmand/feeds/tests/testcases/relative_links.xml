@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Relative URL Blog</title>
+  <link href="/" rel="alternate"/>
+  <link href="/feeds/all.atom.xml" rel="self"/>
+  <id>/</id>
+  <updated>2015-12-04T00:00:00+01:00</updated>
+</feed>
