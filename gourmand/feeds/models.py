@@ -1,3 +1,4 @@
+import io
 import logging
 
 from django.core.exceptions import ValidationError
@@ -35,12 +36,16 @@ class FeedManager(models.Manager):
         if url != new_url and Feed.objects.filter(href=new_url).exists():
             return Feed.objects.get(href=r.url)
 
-        fp = feedparser.parse(r.content)
-        fp['href'] = new_url
-        feed = self.create_from_feed(parsed_feed=fp)
-        feed.etag = r.headers.get('ETag', '')
-        feed.last_modified = r.headers.get('Last-Modified', '')
-        feed.full_clean()
+        try:
+            feed_content = io.BytesIO(r.content)
+            feed_content.url = new_url
+            fp = feedparser.parse(feed_content)
+            feed = self.create_from_feed(parsed_feed=fp)
+            feed.etag = r.headers.get('ETag', '')
+            feed.last_modified = r.headers.get('Last-Modified', '')
+            feed.full_clean()
+        except ValidationError:
+            raise ValidationError("Unable to create feed for %(url)s", code="bad_feed", params={'url': url})
         feed.save()
         feed.update(parsed_feed=fp)
         return feed
@@ -83,8 +88,9 @@ class Feed(models.Model):
         self.etag = r.headers.get('ETag', '')
         self.last_modified = r.headers.get('Last-Modified', '')
         self.save()
-        fp = feedparser.parse(r.content)
-        fp['href'] = r.url
+        feed_content = io.BytesIO(r.content)
+        feed_content.url = r.url
+        fp = feedparser.parse(feed_content)
         return fp
 
     def update(self, parsed_feed=None):
