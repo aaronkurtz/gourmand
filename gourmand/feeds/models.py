@@ -2,7 +2,7 @@ import io
 import logging
 
 from django.core.exceptions import ValidationError
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, URLValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -60,7 +60,12 @@ class FeedManager(models.Manager):
         if parsed_feed.version == '':
             raise ValidationError('Version not found - unable to find proper RSS/Atom feed at %(href)s', code='invalid', params={'href': href})
         title = parsed_feed.feed.get('title', href)
-        link = parsed_feed.feed.get('link', '')
+        try:
+            link = parsed_feed.feed.get('link', '')
+            validator = URLValidator()
+            validator(link)
+        except ValidationError:
+            link = ''
         feed = Feed(title=title, href=href, link=link)
         return feed
 
