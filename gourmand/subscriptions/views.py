@@ -47,7 +47,7 @@ class Reader(LoginRequiredMixin, TemplateView):
         context['categories'] = categories
         # Extra modifier is required to annotate unread as well as articles
         # Conditional Count in 1.8 works, but breaks if combined with another Count, despite using distinct=True
-        subs = subs.order_by('feed__title').extra(
+        subs = subs.order_by('title').extra(
             select={'unread': 'SELECT COUNT(*) FROM subscriptions_personalarticle WHERE ' +
                     'subscriptions_subscription.id = subscriptions_personalarticle.sub_id AND active IS TRUE'})
         context['subs'] = subs
@@ -85,7 +85,7 @@ class AddSubscription(LoginRequiredMixin, UserFormKwargsMixin, FormView):
             category = Category.objects.create(owner=self.request.user, name=new_category, order=max_order+1)
         else:
             category = Category.objects.get(owner=self.request.user, name='Uncategorized')
-        sub = Subscription.objects.create(owner=self.request.user, feed=feed, category=category)
+        sub = Subscription.objects.create(owner=self.request.user, feed=feed, category=category, title=feed.title)
         sub.populate()
         messages.success(self.request, "You have subscribed to <strong>{feed}</strong>".format(feed=feed.title))
         return super().form_valid(form)

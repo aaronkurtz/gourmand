@@ -8,7 +8,7 @@
 {% for sub in subs %}
     <tr>
         <td>
-            <a href="{% url 'admin:subscriptions_subscription_change' sub.pk %}">{{ sub.feed.title }}</a>
+            <a href="{% url 'admin:subscriptions_subscription_change' sub.pk %}">{{ sub.title }}</a>
         </td>
         <td>
             <a href="{% url 'admin:feeds_feed_change' sub.feed.pk %}">{{ sub.feed.href }}</a>

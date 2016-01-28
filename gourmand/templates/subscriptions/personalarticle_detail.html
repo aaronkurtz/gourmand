@@ -1,7 +1,7 @@
 {% extends "_layout/base.html" %}
 {% load staticfiles %}
 
-{% block page_title %}{{personal_article.sub.feed.title}} - {{personal_article.article.title}}{% endblock %}
+{% block page_title %}{{personal_article.sub.title}} - {{personal_article.article.title}}{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -9,7 +9,7 @@
         <a class="btn btn-lg btn-primary" href="{% url 'reader' %}">Reader</a>
         <a class="btn btn-lg btn-primary" href="{% url 'read_new' personal_article.sub.pk %}">Next</a>
     </div>
-    <h2 class="article_content" >{{ personal_article.sub.feed.title }}</h2>
+    <h2 class="article_content" >{{ personal_article.sub.title }}</h2>
     {% with article=personal_article.article %}
         <h4 class="article_content"><a href="{{ article.main_link }}" target='_blank'>{{ article.title }}</a></h4>
         {% for link in article.extralink_set.all %}
