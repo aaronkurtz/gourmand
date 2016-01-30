@@ -97,7 +97,7 @@ class RemoveSubscription(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        self.title = obj.feed.title
+        self.title = obj.title
         return obj
 
     def get_success_url(self):
