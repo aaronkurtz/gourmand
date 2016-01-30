@@ -34,12 +34,13 @@ class Subscription(models.Model):
     feed = models.ForeignKey(Feed)
     public = models.BooleanField(default=True)
     category = models.ForeignKey(Category, related_name='subs')
+    title = models.TextField()
 
     class Meta:
         unique_together = ('owner', 'feed')
 
     def __str__(self):
-        return u"{}'s {}".format(self.owner, self.feed)
+        return u"{}'s {}".format(self.owner, self.title)
 
     def populate(self):
         new_articles = self.feed.article_set.exclude(personalarticle__sub=self)

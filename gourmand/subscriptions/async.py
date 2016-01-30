@@ -53,7 +53,7 @@ def subscribe_to_imported_url(user, url):
     try:
         feed = Feed.objects.get_feed(url)
         category = Category.objects.get_user_categories(user).get(name="Uncategorized")
-        sub, created = Subscription.objects.get_or_create(owner=user, feed=feed, category=category)
+        sub, created = Subscription.objects.get_or_create(owner=user, feed=feed, title=feed.title, category=category)
         if created:
             sub.populate()
             return('added')

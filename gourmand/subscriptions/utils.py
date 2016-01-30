@@ -11,7 +11,7 @@ def create_opml(user):
     body = ET.SubElement(opml, 'body')
     for sub in subs:
         outline = ET.SubElement(body, 'outline')
-        outline.set('text', sub.feed.title)
+        outline.set('text', sub.title)
         outline.set('xmlUrl', sub.feed.href)
     f = io.BytesIO()
     et = ET.ElementTree(opml)

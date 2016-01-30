@@ -36,7 +36,7 @@
                 {% for sub in subs %}
                     <li class="list-group-item">
                         <span class="badge">{{ sub.unread }} <span class="hidden-xs">article{{sub.unread|pluralize}} unread</span></span>
-                        <div class="maxlen"><a href="{% url 'read_new' sub.pk %}">{{ sub.feed.title }}</a></div>
+                        <div class="maxlen"><a href="{% url 'read_new' sub.pk %}">{{ sub.title }}</a></div>
                     </li>
                 {% empty %}
                     No subscriptions.
