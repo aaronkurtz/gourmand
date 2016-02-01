@@ -1,0 +1,18 @@
+{% extends "_layout/base.html" %}
+{% load bootstrap3 %}
+
+{% block page_title %}{{ sub.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="article_content" >{{ sub.title }}</h2>
+    {% for post in posts %}
+        <div class="gourmand-personalarticle">
+            <span class="badge pull-right">Published {{ post.article.when|timesince }} ago</span>
+            <h4 class="article_content"><a href="{% url 'article' post.pk %}">{{ post.article.title }}</a></h4>
+        </div>
+    {% empty %}
+        No posts.
+    {% endfor %}
+</div>
+{% endblock content %}

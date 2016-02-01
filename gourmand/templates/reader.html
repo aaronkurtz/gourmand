@@ -39,7 +39,7 @@
                             <a href="{% url 'update_subscription' sub.pk %}"><span class="glyphicon glyphicon-edit"></span></a>
                             <a href="{% url 'remove_subscription' sub.pk %}"><span class="glyphicon glyphicon-trash"></span></a>
                         </span>
-                        <a href="{% url 'read_new' sub.pk %}"><div class="maxlen">{{ sub.title }}</div></a>
+                        <a href="{% url 'subscription' sub.pk %}"><div class="maxlen">{{ sub.title }}</div></a>
                 </div>
             {% empty %}
                 No subscriptions.
