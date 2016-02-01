@@ -7,7 +7,7 @@ from .models import Subscription, PersonalArticle, Category
 @admin.register(Subscription)
 class SubAdmin(admin.ModelAdmin):
     list_display = ('owner', 'title', 'feed', 'category')
-    list_display_links = ('feed',)
+    list_display_links = ('title', 'feed')
     select_related = ('feed', 'category')
     readonly_fields = ('owner', 'feed', 'category')
     fields = (('owner', 'feed'), 'category', 'title', 'public')
