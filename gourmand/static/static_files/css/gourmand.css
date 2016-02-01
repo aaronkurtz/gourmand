@@ -7,3 +7,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.gourmand-subscription {
+    padding: 5px 5px;
+}

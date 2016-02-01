@@ -46,6 +46,18 @@ class NewSubForm(UserKwargModelFormMixin, forms.Form):
         return cleaned_data
 
 
+class UpdateSubscriptionForm(UserKwargModelFormMixin, forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['category'].queryset = Category.objects.filter(owner=self.user).order_by('name')
+        self.fields['category'].empty_label = None
+
+    class Meta:
+        model = Subscription
+        fields = ('title', 'category', 'public')
+        widgets = {'title': forms.TextInput}
+
+
 class ImportOPMLForm(UserKwargModelFormMixin, forms.Form):
     opml_file = forms.FileField(label='OPML File')
 
