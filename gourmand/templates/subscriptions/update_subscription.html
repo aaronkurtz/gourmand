@@ -6,11 +6,11 @@
 {% block content %}
 <div class="container">
 <p>
-    <h2>Updating {{ subscription.title }}</h2>
+    <h2 class="article_content">Updating {{ subscription.title }}</h2>
     {% if subscription.title != subscription.feed.title %}
-        <h3>Original Title: {{ subscription.feed.title }}</h3>
+        <h3 class="article_content">Original Title: {{ subscription.feed.title }}</h3>
     {% endif %}
-    <h3>Feed URL: {{ subscription.feed.href }}</h3>
+    <h3 class="article_content">Feed URL: <a href="{{ subscription.feed.href }}">{{ subscription.feed.href }}</a></h3>
     <p>
     </p>
     <form class="form" action="{% url 'update_subscription' object.pk %}" method="post">
