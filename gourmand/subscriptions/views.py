@@ -106,6 +106,21 @@ class UpdateSubscription(LoginRequiredMixin, FormValidMessageMixin, UserFormKwar
         return Subscription.objects.filter(owner=self.request.user).select_related('feed', 'category')
 
 
+class MarkRead(LoginRequiredMixin, UpdateView):
+    template_name = 'subscriptions/mark_read.html'
+    fields = ()
+
+    def get_queryset(self):
+        return Subscription.objects.filter(owner=self.request.user)
+
+    def get_success_url(self):
+        count = self.object.personalarticle_set.filter(active=True).update(active=False)
+        messages.success(self.request,
+                         "You marked {count} article{s} in {title} as read".format(
+                             count=count, s=pluralize(count), title=self.object.title))
+        return reverse_lazy('reader')
+
+
 class RemoveSubscription(LoginRequiredMixin, DeleteView):
     def get_queryset(self):
         return Subscription.objects.filter(owner=self.request.user).select_related('feed')
