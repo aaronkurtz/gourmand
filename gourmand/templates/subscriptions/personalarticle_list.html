@@ -8,7 +8,7 @@
     <h2 class="article_content">{{ sub.title }}</h2>
     <p>
     {% if sub.feed.link %}
-    <h3><a target="_blank" href="{{ sub.feed.link }}"><span class="glyphicon glyphicon-home"></span> {{ sub.feed.link }}</a></h3>
+    <h3 class="maxlen"><a target="_blank" href="{{ sub.feed.link }}"><span class="glyphicon glyphicon-home"></span> {{ sub.feed.link }}</a></h3>
     {% endif %}
     </p>
     <p></p>
@@ -22,7 +22,20 @@
     {% for post in posts %}
         <div class="gourmand-personalarticle">
             <span class="badge pull-right hidden-xs">Published {{ post.article.when|timesince }} ago</span>
-            <h4 class="article_content"><a href="{% url 'article' post.pk %}">{{ post.article.title }}</a></h4>
+            <h4 class="article_content">
+                {% if post.archived %}
+                    <span class="glyphicon glyphicon-star"></span>
+                {% else %}
+                    <span class="glyphicon glyphicon-star-empty"></span>
+                {% endif %}
+                <a href="{% url 'article' post.pk %}">
+                {% if post.active %}
+                    <strong>{{ post.article.title }}</strong>
+                {% else %}
+                    {{ post.article.title }}
+                {% endif %}
+                </a>
+            </h4>
             <span class="badge visible-xs">Published {{ post.article.when|timesince }} ago</span>
         </div>
         <hr>
