@@ -56,6 +56,7 @@ class Reader(LoginRequiredMixin, TemplateView):
 
 class PersonalArticleList(LoginRequiredMixin, ListView):
     model = PersonalArticle
+    context_object_name = 'posts'
 
     def get_queryset(self):
         self.sub = get_object_or_404(Subscription, pk=self.kwargs['pk'])
@@ -99,23 +100,33 @@ class UpdateSubscription(LoginRequiredMixin, FormValidMessageMixin, UserFormKwar
     template_name = 'subscriptions/update_subscription.html'
 
     def get_form_valid_message(self):
-        return "You have updated <strong>{feed}</strong>".format(feed=self.object.title)
+        return "You have updated <strong>{title}</strong>".format(title=self.object.title)
 
     def get_queryset(self):
         return Subscription.objects.filter(owner=self.request.user).select_related('feed', 'category')
+
+
+class MarkRead(LoginRequiredMixin, UpdateView):
+    template_name = 'subscriptions/mark_read.html'
+    fields = ()
+
+    def get_queryset(self):
+        return Subscription.objects.filter(owner=self.request.user)
+
+    def get_success_url(self):
+        count = self.object.personalarticle_set.filter(active=True).update(active=False)
+        messages.success(self.request,
+                         "You marked {count} article{s} in {title} as read".format(
+                             count=count, s=pluralize(count), title=self.object.title))
+        return reverse_lazy('reader')
 
 
 class RemoveSubscription(LoginRequiredMixin, DeleteView):
     def get_queryset(self):
         return Subscription.objects.filter(owner=self.request.user).select_related('feed')
 
-    def get_object(self, queryset=None):
-        obj = super().get_object(queryset)
-        self.title = obj.title
-        return obj
-
     def get_success_url(self):
-        messages.success(self.request, "You unsubscribed from {title}".format(title=self.title))
+        messages.success(self.request, "You unsubscribed from {title}".format(title=self.object.title))
         return reverse_lazy('reader')
 
 

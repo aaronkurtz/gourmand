@@ -1,0 +1,30 @@
+{% extends "_layout/base.html" %}
+{% load bootstrap3 %}
+
+{% block page_title %}{{ sub.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="article_content">{{ sub.title }}</h2>
+    <p>
+    {% if sub.feed.link %}
+    <h3><a target="_blank" href="{{ sub.feed.link }}"><span class="glyphicon glyphicon-home"></span> {{ sub.feed.link }}</a></h3>
+    {% endif %}
+    </p>
+    <p></p>
+    <div>
+        <a class="btn btn-default" href="{% url 'update_subscription' sub.pk %}"><span class="glyphicon glyphicon-edit"></span>Edit</a>
+        <a class="btn btn-default" href="{% url 'remove_subscription' sub.pk %}"><span class="glyphicon glyphicon-trash"></span>Trash</a>
+        <a class="btn btn-default" href="{% url 'mark_read' sub.pk %}"><span class="glyphicon glyphicon-check"></span>Mark Read</a>
+    </div>
+
+    {% for post in posts %}
+        <div class="gourmand-personalarticle">
+            <span class="badge pull-right hidden-xs">Published {{ post.article.when|timesince }} ago</span>
+            <h4 class="article_content"><a href="{% url 'article' post.pk %}">{{ post.article.title }}</a></h4>
+        </div>
+    {% empty %}
+        No posts.
+    {% endfor %}
+</div>
+{% endblock content %}
