@@ -125,13 +125,8 @@ class RemoveSubscription(LoginRequiredMixin, DeleteView):
     def get_queryset(self):
         return Subscription.objects.filter(owner=self.request.user).select_related('feed')
 
-    def get_object(self, queryset=None):
-        obj = super().get_object(queryset)
-        self.title = obj.title
-        return obj
-
     def get_success_url(self):
-        messages.success(self.request, "You unsubscribed from {title}".format(title=self.title))
+        messages.success(self.request, "You unsubscribed from {title}".format(title=self.object.title))
         return reverse_lazy('reader')
 
 
