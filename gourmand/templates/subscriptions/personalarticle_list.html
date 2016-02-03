@@ -18,11 +18,14 @@
         <a class="btn btn-default" href="{% url 'mark_read' sub.pk %}"><span class="glyphicon glyphicon-check"></span>Mark Read</a>
     </div>
 
+    <hr>
     {% for post in posts %}
         <div class="gourmand-personalarticle">
             <span class="badge pull-right hidden-xs">Published {{ post.article.when|timesince }} ago</span>
             <h4 class="article_content"><a href="{% url 'article' post.pk %}">{{ post.article.title }}</a></h4>
+            <span class="badge visible-xs">Published {{ post.article.when|timesince }} ago</span>
         </div>
+        <hr>
     {% empty %}
         No posts.
     {% endfor %}
