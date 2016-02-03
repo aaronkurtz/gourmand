@@ -5,7 +5,13 @@
 
 {% block content %}
 <div class="container">
-    <h2 class="article_content" >{{ sub.title }}</h2>
+    <h2 class="article_content">{{ sub.title }}</h2>
+    <p>
+    {% if sub.feed.link %}
+    <h3><a target="_blank" href="{{ sub.feed.link }}"><span class="glyphicon glyphicon-home"></span> {{ sub.feed.link }}</a></h3>
+    {% endif %}
+    </p>
+    <p></p>
     <div>
         <a class="btn btn-default" href="{% url 'update_subscription' sub.pk %}"><span class="glyphicon glyphicon-edit"></span>Edit</a>
         <a class="btn btn-default" href="{% url 'remove_subscription' sub.pk %}"><span class="glyphicon glyphicon-trash"></span>Trash</a>
