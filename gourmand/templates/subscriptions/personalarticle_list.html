@@ -6,9 +6,15 @@
 {% block content %}
 <div class="container">
     <h2 class="article_content" >{{ sub.title }}</h2>
+    <div>
+        <a class="btn btn-default" href="{% url 'update_subscription' sub.pk %}"><span class="glyphicon glyphicon-edit"></span>Edit</a>
+        <a class="btn btn-default" href="{% url 'remove_subscription' sub.pk %}"><span class="glyphicon glyphicon-trash"></span>Trash</a>
+        <a class="btn btn-default" href="#read"><span class="glyphicon glyphicon-check"></span>Mark Read</a>
+    </div>
+
     {% for post in posts %}
         <div class="gourmand-personalarticle">
-            <span class="badge pull-right">Published {{ post.article.when|timesince }} ago</span>
+            <span class="badge pull-right hidden-xs">Published {{ post.article.when|timesince }} ago</span>
             <h4 class="article_content"><a href="{% url 'article' post.pk %}">{{ post.article.title }}</a></h4>
         </div>
     {% empty %}
