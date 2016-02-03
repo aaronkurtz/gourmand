@@ -100,7 +100,7 @@ class UpdateSubscription(LoginRequiredMixin, FormValidMessageMixin, UserFormKwar
     template_name = 'subscriptions/update_subscription.html'
 
     def get_form_valid_message(self):
-        return "You have updated <strong>{feed}</strong>".format(feed=self.object.title)
+        return "You have updated <strong>{title}</strong>".format(title=self.object.title)
 
     def get_queryset(self):
         return Subscription.objects.filter(owner=self.request.user).select_related('feed', 'category')
