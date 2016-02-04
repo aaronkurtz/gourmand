@@ -60,6 +60,7 @@ class UpdateSubscriptionForm(UserKwargModelFormMixin, forms.ModelForm):
 
 class ImportOPMLForm(UserKwargModelFormMixin, forms.Form):
     opml_file = forms.FileField(label='OPML File')
+    mark_read = forms.BooleanField(required=False, label='Mark posts as read')
 
     def clean(self):
         if 'opml_file' not in self.cleaned_data:

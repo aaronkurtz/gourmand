@@ -137,6 +137,7 @@ class ImportOPML(LoginRequiredMixin, UserFormKwargsMixin, FormView):
 
     def form_valid(self, form):
         feeds = form.cleaned_data['feeds']
+        mark_read = form.cleaned_data['mark_read']
         urls = {f.get('xmlUrl', None) for f in feeds}
         existing_subscriptions = Subscription.objects.filter(owner=self.request.user, feed__href__in=urls)
         existing_urls = set(existing_subscriptions.values_list('feed__href', flat=True))
@@ -144,7 +145,7 @@ class ImportOPML(LoginRequiredMixin, UserFormKwargsMixin, FormView):
         num_existing = len(existing_urls)
         num_fresh = len(fresh_urls)
         if fresh_urls:
-            async(import_urls, self.request.user, fresh_urls, group='opml_import')
+            async(import_urls, self.request.user, fresh_urls, mark_read, group='opml_import')
         if num_fresh:
             messages.success(self.request, "You imported {sub} feed{s} - processing now.".format(sub=num_fresh, s=pluralize(num_fresh)))
         if num_existing:

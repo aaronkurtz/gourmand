@@ -15,11 +15,11 @@ from .models import Subscription, Category
 IMPORT_WAIT = 2 * 60
 
 
-def import_urls(user, fresh_urls):
+def import_urls(user, fresh_urls, mark_read):
     group = uuid()
     size = len(fresh_urls)
     for url in fresh_urls:
-        async(subscribe_to_imported_url, user, url, group=group)
+        async(subscribe_to_imported_url, user, url, mark_read, group=group)
     start = time.time()
     while True:
         # print("Time", time.time() - start, "count", count_group(group))
@@ -49,13 +49,15 @@ def import_urls(user, fresh_urls):
     return pretty_results
 
 
-def subscribe_to_imported_url(user, url):
+def subscribe_to_imported_url(user, url, mark_read):
     try:
         feed = Feed.objects.get_feed(url)
         category = Category.objects.get_user_categories(user).get(name="Uncategorized")
         sub, created = Subscription.objects.get_or_create(owner=user, feed=feed, title=feed.title, category=category)
         if created:
             sub.populate()
+            if mark_read:
+                sub.personalarticle_set.update(active=False)
             return('added')
         else:
             return('existed')
