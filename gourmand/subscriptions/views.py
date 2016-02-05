@@ -38,7 +38,7 @@ class Reader(LoginRequiredMixin, TemplateView):
 
         active_cat = None
         if self.request.GET.get('reset', None):
-            del self.request.session['active_cat']
+            self.request.session.pop('active_cat', None)
         else:
             active_cat = self.request.GET.get('category', self.request.session.get('active_cat', None))
             if active_cat:
