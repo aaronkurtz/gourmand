@@ -1,5 +1,6 @@
 {% load bootstrap3 %}
 {% load staticfiles %}
+{% load hijack_tags %}
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
@@ -36,9 +37,11 @@
     {% bootstrap_css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/gourmand.css' %}" />
+    <link rel="stylesheet" tpye="text/css" href="{% static 'hijack/hijack-styles.css' %}" />
   {% endblock header %}
 </head>
 <body>
+{% hijack_notification %}
 <nav class="navbar navbar-default navbar-static-top">
   <div class="container">
     <div class="navbar-header">

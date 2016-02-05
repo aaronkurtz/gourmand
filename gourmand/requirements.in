@@ -11,6 +11,7 @@ django-braces
 django-debug-toolbar
 django-environ
 django-extensions
+django-hijack
 django-q
 whitenoise
 

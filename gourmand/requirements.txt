@@ -13,30 +13,36 @@ defusedxml==0.4.1
 django-async-messages==0.3.1
 django-bootstrap3==6.2.2
 django-braces==1.8.1
+django-compat==1.0.8      # via django-hijack
 django-debug-toolbar==1.4
 django-environ==0.4.0
 django-extensions==1.6.1
+django-hijack==2.0.3
 django-picklefield==0.3.2  # via django-q
-django-q==0.7.13
-Django==1.8.8
+django-q==0.7.15
+Django==1.8.9
 feedparser==5.2.1
 first==2.0.1              # via pip-tools
 future==0.15.2            # via django-q
 httmock==1.2.4
 ipython-genutils==0.1.0   # via traitlets
-ipython==4.0.3
+ipython==4.1.1
 opbeat==3.2.1
 path.py==8.1.2            # via pickleshare
 pexpect==4.0.1            # via ipython
 pickleshare==0.6          # via ipython
 pip-tools==1.5
 psycopg2==2.6.1
-ptyprocess==0.5           # via pexpect
+ptyprocess==0.5.1         # via pexpect
 python-dateutil==2.4.2
 requests==2.9.1
 simplegeneric==0.8.1      # via ipython
-six==1.10.0               # via blessed, django-braces, django-environ, django-extensions, pip-tools, python-dateutil
+six==1.10.0               # via blessed, django-braces, django-compat, django-environ, django-extensions, pip-tools, python-dateutil
 sqlparse==0.1.18          # via django-debug-toolbar
 traitlets==4.1.0          # via ipython
 wcwidth==0.1.6            # via blessed
 whitenoise==2.0.6
+
+# The following packages are commented out because they are
+# considered to be unsafe in a requirements file:
+# setuptools                # via ipython

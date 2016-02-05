@@ -36,6 +36,8 @@ THIRD_PARTY_APPS = (
     'debug_toolbar',
     'django_q',
     'opbeat.contrib.django',
+    'hijack',
+    'compat',
 )
 
 LOCAL_APPS = (
@@ -89,6 +91,8 @@ if DEBUG:  # For quicker development, reload template changes w/o restarting ser
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# django-hijack
+HIJACK_USE_BOOTSTRAP = True
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
