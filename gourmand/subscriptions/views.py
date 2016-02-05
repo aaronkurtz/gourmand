@@ -16,6 +16,10 @@ from .models import Subscription, PersonalArticle, Category
 from .utils import create_opml
 
 
+class Account(LoginRequiredMixin, TemplateView):
+    template_name = "account/index.html"
+
+
 class Reader(LoginRequiredMixin, TemplateView):
     template_name = "reader.html"
 

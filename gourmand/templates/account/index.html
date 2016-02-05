@@ -1,0 +1,24 @@
+{% extends "_layout/base.html" %}
+{% load bootstrap3 %}
+
+{% block page_title %}Account{% endblock %}
+
+{% block content %}
+<div class="container">
+<p>
+<h2 class="article_content">Account Options For {{ request.user }}</h2>
+    <p></p>
+    <h4>Export Your Feeds</h4>
+    <p>
+        Moving to another RSS reader? OPML lets you carry your favorite subscriptions around in one file.
+    </p>
+    <a class="btn btn-primary" href="{% url 'export_opml' %}">Export OPML</a>
+
+    <h4>Delete Account</h4>
+    <p>
+        Sad to see you go. This will wipe your account completely.
+    </p>
+    <a class="btn btn-danger disabled" href="#">Delete Account</a>
+
+</div>
+{% endblock content %}
