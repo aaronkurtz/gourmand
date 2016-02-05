@@ -1,0 +1,26 @@
+{% extends "_layout/base.html" %}
+{% load bootstrap3 %}
+
+{% block page_title %}Delete Account{% endblock %}
+
+{% block content %}
+<div class="container">
+<p>
+<h2 class="article_content">Delete Account For {{ request.user }}</h2>
+    <p></p>
+    <p>
+        Sad to see you go. This will wipe your account completely.
+    </p>
+
+    <form class="form" action="{% url 'remove_account' %}" method="post">
+        {% csrf_token %}
+        {% buttons %}
+            <button type="submit" class="btn btn-danger">
+                Delete Account
+            </button>
+            <a class="btn btn-primary" href="{% url 'reader' %}">Cancel</a>
+        {% endbuttons %}
+    </form>
+
+</div>
+{% endblock content %}

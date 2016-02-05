@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth import get_user
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count, Max, Case, When
@@ -18,6 +19,14 @@ from .utils import create_opml
 
 class Account(LoginRequiredMixin, TemplateView):
     template_name = "account/index.html"
+
+
+class DeleteAccount(LoginRequiredMixin, DeleteView):
+    template_name = "account/delete.html"
+    success_url = reverse_lazy('front')
+
+    def get_object(self, queryset=None):
+        return get_user(self.request)
 
 
 class Reader(LoginRequiredMixin, TemplateView):
