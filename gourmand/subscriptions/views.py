@@ -52,18 +52,20 @@ class Reader(LoginRequiredMixin, TemplateView):
                     active_cat = None
 
         context['active_cat'] = active_cat
-        context['unread_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user, active=True).count()
         categories = Category.objects.get_user_categories(self.request.user).order_by('-order')
         # FIXME N+1 query
         for cat in categories:
-            cat.unread = Subscription.objects.filter(category=cat).aggregate(unread=Count(Case(When(personalarticle__active=True, then=1))))['unread']
+            cat.count = Subscription.objects.filter(category=cat).aggregate(unread=Count(Case(When(personalarticle__active=True, then=1))))['unread']
         context['categories'] = categories
         # Extra modifier is required to annotate unread as well as articles
         # Conditional Count in 1.8 works, but breaks if combined with another Count, despite using distinct=True
         subs = subs.order_by('title').extra(
-            select={'unread': 'SELECT COUNT(*) FROM subscriptions_personalarticle WHERE ' +
+            select={'count': 'SELECT COUNT(*) FROM subscriptions_personalarticle WHERE ' +
                     'subscriptions_subscription.id = subscriptions_personalarticle.sub_id AND active IS TRUE'})
+        subs = filter(lambda x: x.count, subs)
+        context['count_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user, active=True).count()
         context['subs'] = subs
+        context['reading'] = "unread"
         return context
 
 
@@ -75,11 +77,14 @@ class PersonalArticleList(LoginRequiredMixin, ListView):
         self.sub = get_object_or_404(Subscription, pk=self.kwargs['pk'])
         if self.sub.owner != self.request.user:
             raise PermissionDenied
-        return PersonalArticle.objects.filter(sub=self.sub).select_related('article').order_by('article__when')
+        posts = PersonalArticle.objects.filter(sub=self.sub).select_related('article').order_by('article__when')
+        posts = posts.filter(active=True)
+        return posts
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sub'] = self.sub
+        context['reading'] = 'unread'
         return context
 
 

@@ -11,3 +11,11 @@
 .gourmand-subscription {
     padding: 5px 5px;
 }
+
+.saved_post {
+    color: gold;
+}
+
+.unsaved_post {
+    color: #d3d3d3;
+}

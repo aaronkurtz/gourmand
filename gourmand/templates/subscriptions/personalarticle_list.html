@@ -24,9 +24,9 @@
             <span class="badge pull-right hidden-xs">Published {{ post.article.when|timesince }} ago</span>
             <h4 class="article_content">
                 {% if post.archived %}
-                    <span class="glyphicon glyphicon-star"></span>
+                    <span class="saved_post glyphicon glyphicon-star"></span>
                 {% else %}
-                    <span class="glyphicon glyphicon-star-empty"></span>
+                    <span class="unsaved_post glyphicon glyphicon-star-empty"></span>
                 {% endif %}
                 <a href="{% url 'article' post.pk %}">
                 {% if post.active %}
@@ -40,7 +40,7 @@
         </div>
         <hr>
     {% empty %}
-        No posts.
+        No {{ reading }} posts.
     {% endfor %}
 </div>
 {% endblock content %}

@@ -13,12 +13,12 @@
             <h4>Categories</h4>
             <ul class="nav nav-pills nav-stacked">
                 <li role="presentation" {% if not active_cat %}class="active"{% endif %}>
-                    <a href="{% url 'reader' %}?reset=True">All<span class="badge pull-right">{{ unread_all }}</span></a>
+                    <a href="{% url 'reader' %}?reset=True">All<span class="badge pull-right">{{ count_all }}</span></a>
                 </li>
                 {% for category in categories %}
                     <li role="presentation" {% if active_cat == category.id %}class="active"{% endif %}>
                         <a href="{% url 'reader' %}?category={{ category.name|urlencode }}">
-                        <span class="badge pull-right">{{ category.unread }}</span>
+                        <span class="badge pull-right">{{ category.count }}</span>
                         <div class="maxlen">{{ category.name }}</div>
                         </a>
                     </li>
@@ -35,7 +35,9 @@
             {% for sub in subs %}
                 <div class="gourmand-subscription">
                         <span class="pull-right">
-                            <a href="{% url 'read_new' sub.pk %}"><span class="badge">{{ sub.unread }} <span class="hidden-xs">article{{sub.unread|pluralize}} unread</span></span></a>
+                            <a href="{% url 'read_new' sub.pk %}">
+                                <span class="badge">{{ sub.count }} <span class="hidden-xs">{{ reading }} article{{sub.count|pluralize}}</span></span>
+                            </a>
                         </span>
                         <a href="{% url 'subscription' sub.pk %}"><div class="maxlen">{{ sub.title }}</div></a>
                 </div>
