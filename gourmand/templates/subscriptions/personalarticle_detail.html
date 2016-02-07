@@ -48,6 +48,7 @@ $(document).ready(function() {
 
     $('.article_content img').addClass('img-responsive');
     $('.article_content a').attr('target', '_blank');
+    $('.article_content div').attr('style', '');
     TooLong();
     $(window).on('scroll.TooLong', TooLong);
     $(window).on('resize.TooLong', TooLong);
