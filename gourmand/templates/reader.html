@@ -33,14 +33,15 @@
                 <h4 class="maxlen">Feeds{% if active_cat %} - {{ active_cat_name }}{% endif %}</h4>
             </div>
             {% for sub in subs %}
+                <span class="pull-right">
+                    <a class ="btn btn-default" href="{% url 'read_new' sub.pk %}">
+                        <span class="glyphicon glyphicon-list-alt"></span> {{ sub.count }}<span class="hidden-xs"> {{ reading }}</span>
+                    </a>
+                </span>
                 <div class="gourmand-subscription">
-                        <span class="pull-right">
-                            <a href="{% url 'read_new' sub.pk %}">
-                                <span class="badge">{{ sub.count }} <span class="hidden-xs">{{ reading }} article{{sub.count|pluralize}}</span></span>
-                            </a>
-                        </span>
-                        <a href="{% url 'subscription' sub.pk %}"><div class="maxlen">{{ sub.title }}</div></a>
+                    <a href="{% url 'subscription' sub.pk %}"><div class="maxlen">{{ sub.title }}</div></a>
                 </div>
+                <hr>
             {% empty %}
                 No subscriptions.
             {% endfor %}
