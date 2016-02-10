@@ -212,14 +212,20 @@ class ExportOPML(LoginRequiredMixin, View):
         return response
 
 
-class ReadNew(LoginRequiredMixin, RedirectView):
+class ReadOldest(LoginRequiredMixin, RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
         sub = get_object_or_404(Subscription, owner=self.request.user, pk=kwargs['pk'])
+        reading = self.request.session.get('reading', 'unread')
+        filter_args = {'sub': sub}
+        if reading == 'unread':
+            filter_args['active'] = True
+        elif reading == 'saved':
+            filter_args['archived'] = True
         try:
-            oldest_unread = sub.personalarticle_set.filter(active=True).earliest('article__when')
-            return reverse_lazy('article', args=[oldest_unread.pk])
+            oldest = PersonalArticle.objects.select_related('article').filter(**filter_args).earliest('article__when')
+            return reverse_lazy('article', args=[oldest.pk])
         except PersonalArticle.DoesNotExist:
             return reverse_lazy('reader')
 
