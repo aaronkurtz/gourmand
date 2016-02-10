@@ -89,9 +89,10 @@ class Reader(LoginRequiredMixin, TemplateView):
         return context
 
 
-class PersonalArticleList(LoginRequiredMixin, ListView):
+class PostsList(LoginRequiredMixin, ListView):
     model = PersonalArticle
     context_object_name = 'posts'
+    template_name = "subscriptions/posts.html"
 
     def get_queryset(self):
         self.sub = get_object_or_404(Subscription, pk=self.kwargs['pk'])
