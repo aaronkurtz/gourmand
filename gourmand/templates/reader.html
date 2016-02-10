@@ -26,11 +26,18 @@
             </ul>
         </div>
         <div class="col-sm-9 gourmand-main">
+
+
             <div>
                 <p class="pull-right visible-xs">
                     <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Categories</button>
                 </p>
                 <h4 class="maxlen">Feeds{% if active_cat %} - {{ active_cat_name }}{% endif %}</h4>
+            </div>
+            <div class="btn-group btn-group-justified">
+                <a class="btn btn-default {% if reading == 'unread' %}disabled{% endif %}" href="{% url 'reader' %}?reading=unread">Unread</a>
+                <a class="btn btn-default {% if reading == 'saved' %}disabled{% endif %}" href="{% url 'reader' %}?reading=saved">Saved</a>
+                <a class="btn btn-default {% if reading == 'all' %}disabled{% endif %}" href="{% url 'reader' %}?reading=all">All</a>
             </div>
             <br/>
             {% for sub in subs %}

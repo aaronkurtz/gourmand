@@ -34,7 +34,7 @@ class Reader(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        subs = Subscription.objects.filter(owner=self.request.user).select_related('feed')
+        subs = Subscription.objects.filter(owner=self.request.user).select_related('feed').order_by('title')
 
         active_cat = None
         if self.request.GET.get('reset', None):
@@ -53,19 +53,39 @@ class Reader(LoginRequiredMixin, TemplateView):
 
         context['active_cat'] = active_cat
         categories = Category.objects.get_user_categories(self.request.user).order_by('-order')
-        # FIXME N+1 query
-        for cat in categories:
-            cat.count = Subscription.objects.filter(category=cat).aggregate(unread=Count(Case(When(personalarticle__active=True, then=1))))['unread']
         context['categories'] = categories
-        # Extra modifier is required to annotate unread as well as articles
-        # Conditional Count in 1.8 works, but breaks if combined with another Count, despite using distinct=True
-        subs = subs.order_by('title').extra(
-            select={'count': 'SELECT COUNT(*) FROM subscriptions_personalarticle WHERE ' +
-                    'subscriptions_subscription.id = subscriptions_personalarticle.sub_id AND active IS TRUE'})
-        subs = filter(lambda x: x.count, subs)
-        context['count_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user, active=True).count()
+
+        reading = self.request.GET.get('reading', self.request.session.get('reading', 'unread'))
+        if reading not in ('unread', 'saved', 'all'):
+            reading = 'unread'
+        self.request.session['reading'] = reading
+        if reading == 'unread':
+            # FIXME N+1 query
+            for cat in categories:
+                cat.count = Subscription.objects.filter(category=cat).aggregate(count=Count(Case(When(personalarticle__active=True, then=1))))['count']
+            # Extra modifier is required to annotate unread as well as articles
+            # Conditional Count in 1.8 works, but breaks if combined with another Count, despite using distinct=True
+            subs = subs.extra(
+                select={'count': 'SELECT COUNT(*) FROM subscriptions_personalarticle WHERE ' +
+                        'subscriptions_subscription.id = subscriptions_personalarticle.sub_id AND active IS TRUE'})
+            subs = filter(lambda x: x.count, subs)
+            context['count_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user, active=True).count()
+        elif reading == 'saved':
+            for cat in categories:
+                cat.count = Subscription.objects.filter(category=cat).aggregate(count=Count(Case(When(personalarticle__archived=True, then=1))))['count']
+            subs = subs.extra(
+                select={'count': 'SELECT COUNT(*) FROM subscriptions_personalarticle WHERE ' +
+                        'subscriptions_subscription.id = subscriptions_personalarticle.sub_id AND archived IS TRUE'})
+            subs = filter(lambda x: x.count, subs)
+            context['count_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user, archived=True).count()
+        else:
+            context['count_all'] = PersonalArticle.objects.count()
+            for cat in categories:
+                cat.count = Subscription.objects.filter(category=cat).aggregate(count=Count('personalarticle'))['count']
+            subs = subs.annotate(count=Count('personalarticle'))
+
         context['subs'] = subs
-        context['reading'] = "unread"
+        context['reading'] = reading
         return context
 
 
