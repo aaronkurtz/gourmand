@@ -230,6 +230,41 @@ class ReadOldest(LoginRequiredMixin, RedirectView):
             return reverse_lazy('reader')
 
 
+class ArticleNav(LoginRequiredMixin, RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        try:
+            post = PersonalArticle.objects.select_related('article').get(pk=kwargs['pk'], sub__owner=self.request.user)
+            reading = self.request.session.get('reading', 'unread')
+            filter_args = {'sub': post.sub}
+            if reading == 'unread':
+                filter_args['active'] = True
+            elif reading == 'saved':
+                filter_args['archived'] = True
+            qs = PersonalArticle.objects.select_related('article').filter(**filter_args)
+            if kwargs['dir'] == 'old':
+                nav_to = qs.filter(article__when__lt=post.article.when).latest('article__when')
+            else:
+                nav_to = qs.filter(article__when__gt=post.article.when).earliest('article__when')
+            return reverse_lazy('article', args=[nav_to.pk])
+        except PersonalArticle.DoesNotExist:
+            return reverse_lazy('reader')
+
+
+class ArticleToggleSave(LoginRequiredMixin, RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        try:
+            post = PersonalArticle.objects.get(pk=kwargs['pk'], sub__owner=self.request.user)
+            post.archived = not post.archived
+            post.save()
+            return reverse_lazy('article', args=[post.pk])
+        except PersonalArticle.DoesNotExist:
+            return reverse_lazy('reader')
+
+
 class ArticleReader(LoginRequiredMixin, DetailView):
     context_object_name = "personal_article"
 
@@ -241,3 +276,12 @@ class ArticleReader(LoginRequiredMixin, DetailView):
         obj.active = False
         obj.save()
         return obj
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reading = self.request.GET.get('reading', self.request.session.get('reading', 'unread'))
+        if reading not in ('unread', 'saved', 'all'):
+            reading = 'unread'
+        self.request.session['reading'] = reading
+        context['reading'] = reading
+        return context

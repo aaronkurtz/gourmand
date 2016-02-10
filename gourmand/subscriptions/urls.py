@@ -1,7 +1,8 @@
 from django.conf.urls import url
 from .views import Reader, PostsList, AddSubscription
 from .views import Account, DeleteAccount
-from .views import ReadOldest, ArticleReader, RemoveSubscription, UpdateSubscription, MarkRead
+from .views import UpdateSubscription, RemoveSubscription, MarkRead
+from .views import ArticleReader, ArticleNav, ArticleToggleSave, ReadOldest
 from .views import ImportOPML, ExportOPML
 
 
@@ -15,6 +16,8 @@ urlpatterns = [
     url(r'^reader/(?P<pk>[0-9]+)/read_oldest$', ReadOldest.as_view(), name="read_new"),
     url(r'^reader/(?P<pk>[0-9]+)/unsubscribe$', RemoveSubscription.as_view(), name="remove_subscription"),
     url(r'^articles/(?P<pk>[0-9]+)/$', ArticleReader.as_view(), name="article"),
+    url(r'^articles/(?P<pk>[0-9]+)/nav/(?P<dir>old|new)$', ArticleNav.as_view(), name="article_nav"),
+    url(r'^articles/(?P<pk>[0-9]+)/toggle$', ArticleToggleSave.as_view(), name="toggle_save"),
     url(r'^account/$', Account.as_view(), name="account"),
     url(r'^account/delete$', DeleteAccount.as_view(), name="remove_account"),
     url(r'^account/opml/export$', ExportOPML.as_view(), name="export_opml"),

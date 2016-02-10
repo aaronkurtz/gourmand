@@ -5,13 +5,38 @@
 
 {% block content %}
 <div class="container">
-    <div class="" id="buttons-top">
-        <a class="btn btn-lg btn-primary" href="{% url 'reader' %}">Reader</a>
-        <a class="btn btn-lg btn-primary" href="{% url 'read_new' personal_article.sub.pk %}">Next</a>
-    </div>
-    <h2 class="maxlen" ><a href="{% url 'subscription' personal_article.sub.pk %}">{{ personal_article.sub.title }}</a></h2>
     {% with article=personal_article.article %}
-        <h4 class="article_content"><a href="{{ article.main_link }}" target='_blank'>{{ article.title }}</a></h4>
+        <div id="buttons-top" class="btn-group btn-group-justified">
+            <a class="btn btn-default" href="{% url 'article_nav' personal_article.pk 'old' %}">Older</a>
+            <a class="btn btn-default" href="{% url 'toggle_save' personal_article.pk %}">{% if personal_article.archived %}Unsave{% else %}Save{% endif %}</a>
+            <div class="btn-group">
+                <a class="btn btn-default dropdown-toggle" href="#" data-toggle="dropdown">
+                    {{ reading|title }}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{% if reading == 'unread' %}disabled{% endif %}"><a href="{% url 'article' personal_article.pk %}?reading=unread">Unread</a></li>
+                    <li class="{% if reading == 'saved' %}disabled{% endif %}"><a href="{% url 'article' personal_article.pk %}?reading=saved">Saved</a></li>
+                    <li class="{% if reading == 'all' %}disabled{% endif %}"><a href="{% url 'article' personal_article.pk %}?reading=all">All</a></li>
+                </ul>
+            </div>
+            <a class="btn btn-default" href="{% url 'article_nav' personal_article.pk 'new' %}">Newer</a>
+        </div>
+        <h2 class="article_content">
+            {% if personal_article.archived %}
+                <span class="saved_post glyphicon glyphicon-star"></span>
+            {% else %}
+                <span class="unsaved_post glyphicon glyphicon-star-empty"></span>
+            {% endif %}
+            <a href="{{ article.main_link }}" target='_blank'>
+                {% if personal_article.active %}
+                    <strong>{{ article.title }}</strong>
+                {% else %}
+                    {{ article.title }}
+                {% endif %}
+            </a>
+        </h2>
+        <h4 class="maxlen" ><a href="{% url 'subscription' personal_article.sub.pk %}">{{ personal_article.sub.title }}</a></h2>
         {% for link in article.extralink_set.all %}
             <h5 class="article_content"><a href="{{ link.link }}" target='_blank'>{{ link.title }}</a></h5>
         {% endfor %}
@@ -26,11 +51,23 @@
                 {{ ec.content|safe }}
             </div>
         {% endfor %}
+        <div id="buttons-bottom" class="hidden btn-group btn-group-justified">
+            <a class="btn btn-default" href="{% url 'article_nav' personal_article.pk 'old' %}">Older</a>
+            <a class="btn btn-default" href="{% url 'toggle_save' personal_article.pk %}">{% if personal_article.archived %}Unsave{% else %}Save{% endif %}</a>
+            <div class="btn-group">
+                <a class="btn btn-default dropdown-toggle" href="#" data-toggle="dropdown">
+                    {{ reading|title }}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{% if reading == 'unread' %}disabled{% endif %}"><a href="{% url 'article' personal_article.pk %}?reading=unread">Unread</a></li>
+                    <li class="{% if reading == 'saved' %}disabled{% endif %}"><a href="{% url 'article' personal_article.pk %}?reading=saved">Saved</a></li>
+                    <li class="{% if reading == 'all' %}disabled{% endif %}"><a href="{% url 'article' personal_article.pk %}?reading=all">All</a></li>
+                </ul>
+            </div>
+            <a class="btn btn-default" href="{% url 'article_nav' personal_article.pk 'new' %}">Newer</a>
+        </div>
     {% endwith %}
-    <div id="buttons-bottom" class="hidden">
-        <a class="btn btn-lg btn-primary" href="{% url 'reader' %}">Reader</a>
-        <a class="btn btn-lg btn-primary" href="{% url 'read_new' personal_article.sub.pk %}">Next</a>
-    </div>
 </div>
 {% endblock content %}
 
