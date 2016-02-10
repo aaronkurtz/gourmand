@@ -97,14 +97,25 @@ class PersonalArticleList(LoginRequiredMixin, ListView):
         self.sub = get_object_or_404(Subscription, pk=self.kwargs['pk'])
         if self.sub.owner != self.request.user:
             raise PermissionDenied
+
         posts = PersonalArticle.objects.filter(sub=self.sub).select_related('article').order_by('article__when')
-        posts = posts.filter(active=True)
+
+        reading = self.request.GET.get('reading', self.request.session.get('reading', 'unread'))
+        if reading not in ('unread', 'saved', 'all'):
+            reading = 'unread'
+        self.request.session['reading'] = reading
+        self.reading = reading
+
+        if reading == 'unread':
+            posts = posts.filter(active=True)
+        elif reading == 'saved':
+            posts = posts.filter(archived=True)
         return posts
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sub'] = self.sub
-        context['reading'] = 'unread'
+        context['reading'] = self.reading
         return context
 
 

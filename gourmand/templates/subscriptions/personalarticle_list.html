@@ -6,9 +6,14 @@
 {% block content %}
 <div class="container">
     <h2 class="article_content">{{ sub.title }}</h2>
+    <div class="btn-group btn-group-justified">
+        <a class="btn btn-default {% if reading == 'unread' %}disabled{% endif %}" href="{% url 'subscription' sub.pk %}?reading=unread">Unread</a>
+        <a class="btn btn-default {% if reading == 'saved' %}disabled{% endif %}" href="{% url 'subscription' sub.pk %}?reading=saved">Saved</a>
+        <a class="btn btn-default {% if reading == 'all' %}disabled{% endif %}" href="{% url 'subscription' sub.pk %}?reading=all">All</a>
+    </div>
     <p>
     {% if sub.feed.link %}
-    <h3 class="maxlen"><a target="_blank" href="{{ sub.feed.link }}"><span class="glyphicon glyphicon-home"></span> {{ sub.feed.link }}</a></h3>
+        <h3 class="maxlen"><a target="_blank" href="{{ sub.feed.link }}"><span class="glyphicon glyphicon-home"></span> {{ sub.feed.link }}</a></h3>
     {% endif %}
     </p>
     <p></p>
