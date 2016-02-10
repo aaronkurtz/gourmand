@@ -34,11 +34,11 @@
                     <span class="unsaved_post glyphicon glyphicon-star-empty"></span>
                 {% endif %}
                 <a href="{% url 'article' post.pk %}">
-                {% if post.active %}
-                    <strong>{{ post.article.title }}</strong>
-                {% else %}
-                    {{ post.article.title }}
-                {% endif %}
+                    {% if post.active %}
+                        <strong>{{ post.article.title }}</strong>
+                    {% else %}
+                        {{ post.article.title }}
+                    {% endif %}
                 </a>
             </h4>
             <span class="badge visible-xs">Published {{ post.article.when|timesince }} ago</span>
