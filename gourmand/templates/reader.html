@@ -32,6 +32,7 @@
                 </p>
                 <h4 class="maxlen">Feeds{% if active_cat %} - {{ active_cat_name }}{% endif %}</h4>
             </div>
+            <br/>
             {% for sub in subs %}
                 <span class="pull-right">
                     <a class ="btn btn-default" href="{% url 'read_new' sub.pk %}">
