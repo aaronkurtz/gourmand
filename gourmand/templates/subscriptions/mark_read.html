@@ -1,22 +1,22 @@
 {% extends "_layout/base.html" %}
 {% load bootstrap3 %}
 
-{% block page_title %}Mark {{ object.title }} As Read{% endblock %}
+{% block page_title %}Mark {{ subscription.title }} As Read{% endblock %}
 
 {% block content %}
 <div class="container">
 <p>
-    <h2>{{ object.title }}</h2>
+    <h2>{{ subscription.title }}</h2>
     <p>
     Confirm marking all articles as read
     </p>
-    <form class="form" action="{% url 'mark_read' object.pk %}" method="post">
+    <form class="form" action="{% url 'mark_read' subscription.pk %}" method="post">
         {% csrf_token %}
         {% buttons %}
             <button type="submit" class="btn btn-warning">
                 Mark Read
             </button>
-            <a class="btn btn-primary" href="{% url 'reader' %}">Cancel</a>
+            <a class="btn btn-default" href="{% url 'subscription' subscription.pk %}">Cancel</a>
         {% endbuttons %}
     </form>
 </p>

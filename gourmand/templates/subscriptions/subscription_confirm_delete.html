@@ -1,22 +1,22 @@
 {% extends "_layout/base.html" %}
 {% load bootstrap3 %}
 
-{% block page_title %}Unsubscribe From {{ object.title }}{% endblock %}
+{% block page_title %}Unsubscribe From {{ subscription.title }}{% endblock %}
 
 {% block content %}
 <div class="container">
 <p>
-    <h2>{{ object.title }}</h2>
+    <h2>{{ subscription.title }}</h2>
     <p>
     Confirm unsubscription
     </p>
-    <form class="form" action="{% url 'remove_subscription' object.pk %}" method="post">
+    <form class="form" action="{% url 'remove_subscription' subscription.pk %}" method="post">
         {% csrf_token %}
         {% buttons %}
             <button type="submit" class="btn btn-danger">
                 Unsubscribe
             </button>
-            <a class="btn btn-primary" href="{% url 'reader' %}">Cancel</a>
+            <a class="btn btn-default" href="{% url 'subscription' subscription.pk %}">Cancel</a>
         {% endbuttons %}
     </form>
 </p>

@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import pluralize
 from django.views.generic import TemplateView, ListView, FormView, View, RedirectView, DetailView, DeleteView, UpdateView
 
-from braces.views import LoginRequiredMixin, UserFormKwargsMixin, FormValidMessageMixin
+from braces.views import LoginRequiredMixin, UserFormKwargsMixin
 from django_q.tasks import async
 
 from .async import import_urls
@@ -142,22 +142,21 @@ class AddSubscription(LoginRequiredMixin, UserFormKwargsMixin, FormView):
         return super().form_valid(form)
 
 
-class UpdateSubscription(LoginRequiredMixin, FormValidMessageMixin, UserFormKwargsMixin, UpdateView):
+class UpdateSubscription(LoginRequiredMixin, UserFormKwargsMixin, UpdateView):
     form_class = UpdateSubscriptionForm
-    success_url = reverse_lazy('reader')
-
     context_object_name = 'subscription'
     template_name = 'subscriptions/update_subscription.html'
-
-    def get_form_valid_message(self):
-        return "You have updated <strong>{title}</strong>".format(title=self.object.title)
 
     def get_queryset(self):
         return Subscription.objects.filter(owner=self.request.user).select_related('feed', 'category')
 
+    def get_success_url(self):
+        return reverse_lazy('subscription', args=[self.object.pk])
+
 
 class MarkRead(LoginRequiredMixin, UpdateView):
     template_name = 'subscriptions/mark_read.html'
+    context_object_name = 'subscription'
     fields = ()
 
     def get_queryset(self):
@@ -172,6 +171,8 @@ class MarkRead(LoginRequiredMixin, UpdateView):
 
 
 class RemoveSubscription(LoginRequiredMixin, DeleteView):
+    context_object_name = 'subscription'
+
     def get_queryset(self):
         return Subscription.objects.filter(owner=self.request.user).select_related('feed')
 
@@ -266,7 +267,7 @@ class ArticleToggleSave(LoginRequiredMixin, RedirectView):
 
 
 class ArticleReader(LoginRequiredMixin, DetailView):
-    context_object_name = "personal_article"
+    context_object_name = "post"
 
     def get_queryset(self):
         return PersonalArticle.objects.filter(sub__owner=self.request.user).select_related('article', 'sub', 'sub__feed')
