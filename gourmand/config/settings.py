@@ -52,11 +52,11 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE_CLASSES = (
     'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'async_messages.middleware.AsyncMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -75,7 +75,7 @@ def show_toolbar(request):
 
 
 DEBUG_TOOLBAR_CONFIG = {
-    'JQUERY_URL':'',
+    'JQUERY_URL': '',
     'RENDER_PANELS': True,
     'SHOW_TOOLBAR_CALLBACK': 'config.settings.show_toolbar',
 }
