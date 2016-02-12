@@ -52,6 +52,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE_CLASSES = (
     'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -61,6 +62,23 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
+
+
+def show_toolbar(request):
+    if DEBUG or request.user.is_superuser:
+        debug = request.GET.get("debug", None)
+        if debug == "on":
+            request.session["debug"] = True
+        elif debug == "off" and "debug" in request.session:
+            del request.session["debug"]
+        return "debug" in request.session
+
+
+DEBUG_TOOLBAR_CONFIG = {
+    'JQUERY_URL':'',
+    'RENDER_PANELS': True,
+    'SHOW_TOOLBAR_CALLBACK': 'config.settings.show_toolbar',
+}
 
 ROOT_URLCONF = 'config.urls'
 
@@ -88,6 +106,8 @@ TEMPLATES = [
 if DEBUG:  # For quicker development, reload template changes w/o restarting server
     TEMPLATES[0]['OPTIONS'].pop('loaders', None)
     TEMPLATES[0]['APP_DIRS'] = True
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
