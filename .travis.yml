@@ -16,6 +16,6 @@ install:
 before_script:
     - psql -c 'create database gourmandci;' -U postgres
 script:
-    - cd gourmand && python manage.py migrate && coverage run --source='.' ./manage.py test
+    - cd gourmand && python manage.py migrate && python manage.py collectstatic --noinput && OPBEAT_DISABLE_SEND=true coverage run --source='.' ./manage.py test
 after_success:
     - codecov
