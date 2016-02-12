@@ -15,6 +15,7 @@ BASE_DIR = environ.Path(__file__) - 2
 
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
+# DEBUG = False
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
@@ -64,20 +65,10 @@ MIDDLEWARE_CLASSES = (
 )
 
 
-def show_toolbar(request):
-    if DEBUG or request.user.is_superuser:
-        debug = request.GET.get("debug", None)
-        if debug == "on":
-            request.session["debug"] = True
-        elif debug == "off" and "debug" in request.session:
-            del request.session["debug"]
-        return "debug" in request.session
-
-
 DEBUG_TOOLBAR_CONFIG = {
     'JQUERY_URL': '',
     'RENDER_PANELS': True,
-    'SHOW_TOOLBAR_CALLBACK': 'config.settings.show_toolbar',
+    'SHOW_TOOLBAR_CALLBACK': 'tools.utils.show_toolbar',
 }
 
 ROOT_URLCONF = 'config.urls'
