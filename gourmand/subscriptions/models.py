@@ -17,6 +17,7 @@ class CategoryManager(models.Manager):
 class Category(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     order = models.PositiveSmallIntegerField()
+    shared = models.BooleanField(default=False)
     name = models.TextField()
 
     objects = CategoryManager()
