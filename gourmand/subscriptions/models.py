@@ -33,7 +33,6 @@ class Category(models.Model):
 class Subscription(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     feed = models.ForeignKey(Feed)
-    public = models.BooleanField(default=True)
     category = models.ForeignKey(Category, related_name='subs')
     title = models.TextField()
 

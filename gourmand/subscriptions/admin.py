@@ -10,7 +10,7 @@ class SubAdmin(admin.ModelAdmin):
     list_display_links = ('title', 'feed')
     select_related = ('feed', 'category')
     readonly_fields = ('owner', 'feed', 'category')
-    fields = (('owner', 'feed'), 'category', 'title', 'public')
+    fields = (('owner', 'feed'), 'category', 'title')
     search_fields = ('title', 'owner__username', 'feed__href')
 
 

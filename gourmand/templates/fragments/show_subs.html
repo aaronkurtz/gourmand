@@ -3,7 +3,6 @@
     <tr>
         <th>Subscription</th>
         <th>Feed</th>
-        <th>Public</th>
     </tr>
 {% for sub in subs %}
     <tr>
@@ -12,9 +11,6 @@
         </td>
         <td>
             <a href="{% url 'admin:feeds_feed_change' sub.feed.pk %}">{{ sub.feed.href }}</a>
-        </td>
-        <td>
-            {{ sub.public }}
         </td>
     </tr>
 {% endfor %}
