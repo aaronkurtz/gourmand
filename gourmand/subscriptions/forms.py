@@ -54,7 +54,7 @@ class UpdateSubscriptionForm(UserKwargModelFormMixin, forms.ModelForm):
 
     class Meta:
         model = Subscription
-        fields = ('title', 'category', 'public')
+        fields = ('title', 'category')
         widgets = {'title': forms.TextInput}
 
 

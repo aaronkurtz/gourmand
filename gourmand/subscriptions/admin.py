@@ -10,7 +10,7 @@ class SubAdmin(admin.ModelAdmin):
     list_display_links = ('title', 'feed')
     select_related = ('feed', 'category')
     readonly_fields = ('owner', 'feed', 'category')
-    fields = (('owner', 'feed'), 'category', 'title', 'public')
+    fields = (('owner', 'feed'), 'category', 'title')
     search_fields = ('title', 'owner__username', 'feed__href')
 
 
@@ -26,10 +26,10 @@ class PersonalArticleAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('owner', 'order', 'name')
+    list_display = ('owner', 'order', 'name', 'shared')
     list_display_links = ('name',)
-    readonly_fields = ('owner', 'show_subs')
-    fields = ('owner', ('order', 'name'), 'show_subs')
+    readonly_fields = ('owner', 'show_subs', 'shared')
+    fields = ('owner', ('order', 'name', 'shared'), 'show_subs')
     ordering = ('owner', '-order')
     search_fields = ('owner__username',)
 
