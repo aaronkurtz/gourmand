@@ -1,6 +1,6 @@
 from django import template
 from django.utils.safestring import mark_safe
-from django.contrib.admin.util import lookup_field
+from django.contrib.admin.utils import lookup_field
 from django.db.models.fields.related import ForeignKey
 from django.db.models import ObjectDoesNotExist
 from django.core.urlresolvers import reverse, NoReverseMatch
