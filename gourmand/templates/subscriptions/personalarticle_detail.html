@@ -73,7 +73,8 @@
 
 {% block footerjs %}
 {{ block.super }}
-<script src="{% static 'js/jquery.visible.min.js' %}"></script>
+<script src="{% static 'js/vendor/jquery.visible.min.js' %}"></script>
+<script src="{% static 'js/vendor/jquery.fitvids.js' %}"></script>
 <script>
 $(document).ready(function() {
     function TooLong(remove) {
@@ -90,6 +91,7 @@ $(document).ready(function() {
     TooLong();
     $(window).on('scroll.TooLong', TooLong);
     $(window).on('resize.TooLong', TooLong);
+    $('.article_content').fitVids();
 });
 </script>
 {% endblock footerjs %}
