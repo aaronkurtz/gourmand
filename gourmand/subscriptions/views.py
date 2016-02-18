@@ -150,6 +150,15 @@ class UpdateSubscription(LoginRequiredMixin, UserFormKwargsMixin, UpdateView):
     def get_queryset(self):
         return Subscription.objects.filter(owner=self.request.user).select_related('feed', 'category')
 
+    def form_valid(self, form):
+        new_category = form.cleaned_data['new_category']
+        if new_category:
+            max_order = Category.objects.filter(owner=self.request.user).aggregate(Max('order'))['order__max']
+            category = Category.objects.create(owner=self.request.user, name=new_category, order=max_order+1)
+            form.instance.category = category
+
+        return super().form_valid(form)
+
     def get_success_url(self):
         return reverse_lazy('subscription', args=[self.object.pk])
 
