@@ -47,10 +47,18 @@ class NewSubForm(UserKwargModelFormMixin, forms.Form):
 
 
 class UpdateSubscriptionForm(UserKwargModelFormMixin, forms.ModelForm):
+    new_category = forms.CharField(required=False)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.filter(owner=self.user).order_by('name')
         self.fields['category'].empty_label = None
+
+    def clean_new_category(self):
+        category = self.cleaned_data['new_category']
+        if category and Category.objects.filter(owner=self.user, name=category).exists():
+            raise forms.ValidationError("You already have a category named %(name)s", code="category_exists", params={'name': category})
+        return category
 
     class Meta:
         model = Subscription
