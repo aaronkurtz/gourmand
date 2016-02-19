@@ -2,3 +2,5 @@ uses:
     - django
 requirements:
     - gourmand/requirements.txt
+python-targets:
+    - 3
