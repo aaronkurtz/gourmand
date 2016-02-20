@@ -54,6 +54,9 @@
         No {{ reading }} posts.
     {% endfor %}
 
-    {% paginate %}
+    {% if paginator %}
+        {% paginate %}
+    {% endif %}
+
 </div>
 {% endblock content %}

@@ -99,6 +99,8 @@ if DEBUG:  # For quicker development, reload template changes w/o restarting ser
     TEMPLATES[0]['OPTIONS'].pop('loaders', None)
     TEMPLATES[0]['APP_DIRS'] = True
 
+PAGINATION_INVALID_PAGE_RAISES_404 = True
+
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 WSGI_APPLICATION = 'config.wsgi.application'
