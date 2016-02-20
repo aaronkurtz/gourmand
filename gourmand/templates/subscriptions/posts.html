@@ -1,5 +1,6 @@
 {% extends "_layout/base.html" %}
 {% load bootstrap3 %}
+{% load pagination_tags %}
 
 {% block page_title %}{{ sub.title }}{% endblock %}
 
@@ -28,6 +29,7 @@
     </div>
 
     <hr>
+    {% autopaginate posts 50 %}
     {% for post in posts %}
         <div class="gourmand-personalarticle">
             <span class="badge pull-right hidden-xs">Published {{ post.article.when|timesince }} ago</span>
@@ -51,5 +53,7 @@
     {% empty %}
         No {{ reading }} posts.
     {% endfor %}
+
+    {% paginate %}
 </div>
 {% endblock content %}

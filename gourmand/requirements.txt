@@ -4,6 +4,7 @@
 #
 #    pip-compile requirements.in
 #
+-e git+https://github.com/staticdev/django-pagination-bootstrap.git@ee33e92351156f16aa321eb712a76fbe0503ac05#egg=django_pagination_bootstrap
 arrow==0.7.0              # via django-q
 blessed==1.14.1           # via django-q
 click==6.2                # via pip-tools
@@ -20,7 +21,7 @@ django-extensions==1.6.1
 django-hijack==2.0.3
 django-picklefield==0.3.2  # via django-q
 django-q==0.7.15
-Django==1.9.2
+Django==1.9.2             # via django-async-messages, django-compat, django-debug-toolbar, django-environ, django-hijack, django-q
 feedparser==5.2.1
 first==2.0.1              # via pip-tools
 future==0.15.2            # via django-q
