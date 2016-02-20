@@ -3,6 +3,10 @@
 
 {% block page_title %}{{ sub.title }}{% endblock %}
 
+{% block admin_object %}
+  <li><a href="{% url 'admin:subscriptions_subscription_change' sub.pk %}">Sub</a></li>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <h2 class="article_content">{{ sub.title }}</h2>

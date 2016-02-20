@@ -80,6 +80,8 @@
           <ul class="nav navbar-nav navbar-right">
               {% if request.user.is_staff %}
               <li><a href="{% url 'admin:index' %}">Admin</a></li>
+              {% block admin_object %}
+              {% endblock %}
               {% endif %}
               <li><a href="{% url 'account' %}">{{ request.user }}</a></li>
             <li><a href="{% url 'logout' %}">Logout</a></li>

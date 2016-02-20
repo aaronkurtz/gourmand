@@ -3,6 +3,10 @@
 
 {% block page_title %}{{post.sub.title}} - {{post.article.title}}{% endblock %}
 
+{% block admin_object %}
+  <li><a href="{% url 'admin:subscriptions_personalarticle_change' post.pk %}">Post</a></li>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     {% with article=post.article %}
