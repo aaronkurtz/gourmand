@@ -38,6 +38,7 @@ THIRD_PARTY_APPS = (
     'opbeat.contrib.django',
     'hijack',
     'compat',
+    'pagination_bootstrap',
 )
 
 LOCAL_APPS = (
@@ -59,6 +60,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'async_messages.middleware.AsyncMiddleware',
+    'pagination_bootstrap.middleware.PaginationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
