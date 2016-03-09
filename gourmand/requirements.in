@@ -14,6 +14,7 @@ django-extensions
 django-hijack
 -e git+https://github.com/staticdev/django-pagination-bootstrap.git@ee33e92351156f16aa321eb712a76fbe0503ac05#egg=django_pagination_bootstrap
 django-q
+django-waffle
 whitenoise
 
 # Third-Party

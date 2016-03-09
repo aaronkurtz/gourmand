@@ -39,6 +39,7 @@ THIRD_PARTY_APPS = (
     'hijack',
     'compat',
     'pagination_bootstrap',
+    'waffle',
 )
 
 LOCAL_APPS = (
@@ -56,6 +57,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'waffle.middleware.WaffleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

@@ -30,7 +30,7 @@ def fix_content(content):
     """
     Parse article content to rewrite it for a better reader experience
     """
-    parsed_content = BeautifulSoup(content)
+    parsed_content = BeautifulSoup(content, "html.parser")
     for img in parsed_content.find_all('img'):
         del img['srcset']
         del img['sizes']

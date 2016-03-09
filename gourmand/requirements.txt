@@ -22,6 +22,7 @@ django-extensions==1.6.1
 django-hijack==2.0.3
 django-picklefield==0.3.2  # via django-q
 django-q==0.7.15
+django-waffle==0.11
 Django==1.9.2             # via django-async-messages, django-compat, django-debug-toolbar, django-environ, django-hijack, django-q
 feedparser==5.2.1
 first==2.0.1              # via pip-tools
