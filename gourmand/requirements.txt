@@ -5,6 +5,7 @@
 #    pip-compile requirements.in
 #
 -e git+https://github.com/staticdev/django-pagination-bootstrap.git@ee33e92351156f16aa321eb712a76fbe0503ac05#egg=django_pagination_bootstrap
+-e git+https://github.com/jsocol/django-waffle.git@3264bf5e1a1373267b75410300e8bf3191c50271#egg=django_waffle
 arrow==0.7.0              # via django-q
 beautifulsoup4==4.4.1
 blessed==1.14.1           # via django-q
@@ -22,7 +23,6 @@ django-extensions==1.6.1
 django-hijack==2.0.3
 django-picklefield==0.3.2  # via django-q
 django-q==0.7.15
-django-waffle==0.11
 Django==1.9.2             # via django-async-messages, django-compat, django-debug-toolbar, django-environ, django-hijack, django-q
 feedparser==5.2.1
 first==2.0.1              # via pip-tools
