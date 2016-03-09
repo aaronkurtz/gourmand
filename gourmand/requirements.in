@@ -17,6 +17,7 @@ django-q
 whitenoise
 
 # Third-Party
+beautifulsoup4
 defusedxml
 feedparser
 python-dateutil

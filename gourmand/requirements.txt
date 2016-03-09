@@ -6,6 +6,7 @@
 #
 -e git+https://github.com/staticdev/django-pagination-bootstrap.git@ee33e92351156f16aa321eb712a76fbe0503ac05#egg=django_pagination_bootstrap
 arrow==0.7.0              # via django-q
+beautifulsoup4==4.4.1
 blessed==1.14.1           # via django-q
 click==6.2                # via pip-tools
 coverage==4.0.3
