@@ -40,7 +40,7 @@ def fix_content(content):
         del div['style']
 
     for table in parsed_content.find_all('table'):
-        table['class'].append('table-responsive')
+        table['class'] = table.get('class', []) + ['table-responsive']
 
     for a in parsed_content.find_all('a'):
         a['target'] = '_blank'
