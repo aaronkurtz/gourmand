@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth import get_user
 from django.core.exceptions import PermissionDenied
@@ -10,11 +12,14 @@ from django.views.generic import TemplateView, ListView, FormView, View, Redirec
 
 from braces.views import LoginRequiredMixin, UserFormKwargsMixin
 from django_q.tasks import async
+from waffle import flag_is_active
 
 from .async import import_urls
 from .forms import NewSubForm, ImportOPMLForm, UpdateSubscriptionForm
 from .models import Subscription, PersonalArticle, Category
-from .utils import create_opml
+from .utils import create_opml, fix_content
+
+logger = logging.getLogger(__name__)
 
 
 class Account(LoginRequiredMixin, TemplateView):
@@ -285,6 +290,8 @@ class ArticleReader(LoginRequiredMixin, DetailView):
         obj = super().get_object(queryset)
         obj.active = False
         obj.save()
+        if flag_is_active(self.request, 'postrewrite'):
+            obj.article.main_content = fix_content(obj.article.main_content)
         return obj
 
     def get_context_data(self, **kwargs):
