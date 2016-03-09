@@ -34,7 +34,7 @@ def fix_content(content):
     for img in parsed_content.find_all('img'):
         del img['srcset']
         del img['sizes']
-        img['class'].append('img-responsive')
+        img['class'] = img.get('class', []) + ['img-responsive']
 
     for div in parsed_content.find_all('div'):
         del div['style']
