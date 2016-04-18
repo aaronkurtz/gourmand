@@ -27,6 +27,7 @@ Django==1.9.4             # via django-async-messages, django-compat, django-deb
 feedparser==5.2.1
 first==2.0.1              # via pip-tools
 future==0.15.2            # via django-q
+gunicorn==19.4.5
 httmock==1.2.5
 ipython-genutils==0.1.0   # via traitlets
 ipython==4.1.2
@@ -39,6 +40,7 @@ psycopg2==2.6.1
 ptyprocess==0.5.1         # via pexpect
 python-dateutil==2.5.0
 requests==2.9.1
+setproctitle==1.1.9
 simplegeneric==0.8.1      # via ipython
 six==1.10.0               # via blessed, django-braces, django-compat, django-environ, django-extensions, pip-tools, python-dateutil
 sqlparse==0.1.19          # via django-debug-toolbar

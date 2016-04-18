@@ -34,3 +34,7 @@ pip-tools
 # Testing
 coverage
 httmock
+
+# Deployment
+gunicorn
+setproctitle
