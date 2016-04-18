@@ -16,7 +16,7 @@ Install PostgreSQL and the python3 and libpq development packages.
 
 For the Debian family:
 
-    sudo apt-get install postgres python3-dev libpq-dev
+    sudo apt-get install postgres build-essential python3-dev libpq-dev
 
 
 In a Python virtual environment, install the Python libraries.
@@ -27,7 +27,8 @@ In a Python virtual environment, install the Python libraries.
 Setup the required environmental variables. Direnv (http://direnv.net/) is one way to do this.
 
     SECRET_KEY=YOURSECRET
-    DATABASE_URL=postres://DBUSER:PASSWORD@db.address:PORT?ATOMIC_REQUESTS=True
+    DATABASE_URL=postgres://DBUSER:PASSWORD@db_address:PORT/dbname
+    CACHE_URL=dbcache://gourmand_cache
     DEBUG=True
 
 ### Vagrant
