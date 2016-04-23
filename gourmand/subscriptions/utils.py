@@ -1,6 +1,11 @@
+import base64
+import hashlib
+import hmac
 import io
 from urllib.parse import urlparse
 from xml.etree import cElementTree as ET
+
+from django.conf import settings
 
 from bs4 import BeautifulSoup
 
@@ -26,12 +31,25 @@ def create_opml(user):
     return f.getvalue()
 
 
+def get_camo_url(image_url):
+    b_url = image_url.encode('utf-8')
+    b_key = settings.CAMO_KEY.encode('utf-8')
+    digest = hmac.new(b_key, b_url, hashlib.sha1).digest()
+    b64digest = base64.urlsafe_b64encode(digest).decode('utf-8').strip('=')
+    b64url = base64.urlsafe_b64encode(b_url).decode('utf-8').strip('=')
+    return '{}{}/{}'.format(settings.CAMO_PATH, b64digest, b64url)
+
+
 def fix_content(content):
     """
     Parse article content to rewrite it for a better reader experience
     """
     parsed_content = BeautifulSoup(content, "html.parser")
+    CAMO_KEY = settings.CAMO_KEY
     for img in parsed_content.find_all('img'):
+        if img.get('src') and CAMO_KEY and urlparse(img['src']).scheme != 'https':
+            img['src'] = get_camo_url(img['src'])
+
         del img['srcset']
         del img['sizes']
         img['class'] = img.get('class', []) + ['img-responsive']
