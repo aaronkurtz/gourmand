@@ -5,7 +5,8 @@ import os
 
 import environ
 
-env = environ.Env(DEBUG=(bool, False), ALLOWED_HOSTS=(list, []), OPBEAT=(dict, {}))
+env = environ.Env(DEBUG=(bool, False), ALLOWED_HOSTS=(list, []), OPBEAT=(dict, {}),
+                  CAMO_KEY=(str, None))
 
 BASE_DIR = environ.Path(__file__) - 2
 
@@ -173,3 +174,10 @@ Q_CLUSTER = {
 
 # Opbeat
 OPBEAT = env('OPBEAT')
+
+
+# Camo settings
+CAMO_KEY = env('CAMO_KEY')
+if CAMO_KEY:
+    CAMO_ADDRESS = env('CAMO_ADDRESS')
+    CAMO_PATH = env('CAMO_PATH')
