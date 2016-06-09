@@ -104,7 +104,7 @@ class PostsList(LoginRequiredMixin, ListView):
         if self.sub.owner != self.request.user:
             raise PermissionDenied
 
-        posts = PersonalArticle.objects.filter(sub=self.sub).select_related('article').order_by('article__when')
+        posts = PersonalArticle.objects.filter(sub=self.sub).select_related('article').order_by('-article__when')
 
         reading = self.request.GET.get('reading', self.request.session.get('reading', 'unread'))
         if reading not in ('unread', 'saved', 'all'):
