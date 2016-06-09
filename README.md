@@ -24,12 +24,49 @@ In a Python virtual environment, install the Python libraries.
     pip install -r gourmand/requirements.txt
 
 
-Setup the required environmental variables. Direnv (http://direnv.net/) is one way to do this.
+Setup the appropriate environmental variables. [Direnv](http://direnv.net/) is one way to do this.
 
     SECRET_KEY=YOURSECRET
     DATABASE_URL=postgres://DBUSER:PASSWORD@db_address:PORT/dbname
     CACHE_URL=dbcache://gourmand_cache
     DEBUG=True
+
+### Optional 
+
+If gourmand is run behind SSL, non-SSL images will create mixed content messages. Gourmand can use [go-camo](https://github.com/cactus/go-camo) to proxy the images. 
+
+
+## Environmental variables
+
+### Required
+
+SECRET_KEY, string - The Django secret key - see https://docs.djangoproject.com/en/1.9/ref/settings/#secret-key
+
+CACHE_URL, django-environ cache_url - see https://github.com/joke2k/django-environ for details.
+
+    CACHE_URL=redis://localhost:6379/0  # Redis example
+
+DATABASE_URL, django-environ db_url - see https://github.com/joke2k/django-environ for details.
+
+    DATABASE_URL=postgres://DBUSER:PASSWORD@db_address:PORT/dbname  # Postgres example
+
+
+### Optional settings
+ALLOWED_HOSTS, comma-seperated list of strings - the appropriate hostnames for the site - see https://docs.djangoproject.com/en/1.9/ref/settings/#allowed-hosts. Required if DEBUG is False.
+
+    ALLOWED_HOSTS=gourmand.io,staging.gourmand.io  # Example
+    
+CAMO_KEY, string - the Camo HMAC key.
+
+CAMO_ADDRESS, hostname/address - the go-camo server's private location. Required if CAMO_KEY is set.
+
+CAMO_PATH, URL - the URL used to construct the public go-camo URLs. Required if CAMO_KEY is set.
+
+DEBUG, Boolean.
+
+OPBEAT, django-environ dict - [Opbeat](https://opbeat.com/) configuration settings for performance monitoring and error reporting. Example:
+
+    OPBEAT=ORGANIZATION_ID=hex,APP_ID=hex,SECRET_TOKEN=hex  # Example
 
 ### Vagrant
 
