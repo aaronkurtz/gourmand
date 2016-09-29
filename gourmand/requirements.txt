@@ -46,7 +46,7 @@ simplegeneric==0.8.1      # via ipython
 six==1.10.0               # via blessed, django-braces, django-compat, django-environ, django-extensions, pip-tools, python-dateutil
 sqlparse==0.1.19          # via django-debug-toolbar
 traitlets==4.1.0          # via ipython
-wcwidth==0.1.6            # via blessed
+wcwidth==0.1.7 # via blessed
 whitenoise==2.0.6
 
 # The following packages are commented out because they are
