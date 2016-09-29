@@ -41,7 +41,7 @@ psycopg2==2.6.2
 ptyprocess==0.5.1         # via pexpect
 python-dateutil==2.5.3
 requests==2.9.1
-setproctitle==1.1.9
+setproctitle==1.1.10
 simplegeneric==0.8.1      # via ipython
 six==1.10.0               # via blessed, django-braces, django-compat, django-environ, django-extensions, pip-tools, python-dateutil
 sqlparse==0.1.19          # via django-debug-toolbar
