@@ -47,7 +47,7 @@ six==1.10.0               # via blessed, django-braces, django-compat, django-en
 sqlparse==0.1.19          # via django-debug-toolbar
 traitlets==4.1.0          # via ipython
 wcwidth==0.1.7 # via blessed
-whitenoise==2.0.6
+whitenoise==3.2.2
 
 # The following packages are commented out because they are
 # considered to be unsafe in a requirements file:
