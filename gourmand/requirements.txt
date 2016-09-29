@@ -37,7 +37,7 @@ path.py==8.1.2            # via pickleshare
 pexpect==4.0.1            # via ipython
 pickleshare==0.6          # via ipython
 pip-tools==1.6
-psycopg2==2.6.1
+psycopg2==2.6.2
 ptyprocess==0.5.1         # via pexpect
 python-dateutil==2.5.3
 requests==2.9.1
