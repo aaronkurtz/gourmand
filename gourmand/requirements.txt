@@ -32,7 +32,7 @@ gunicorn==19.4.5
 httmock==1.2.5
 ipython-genutils==0.1.0   # via traitlets
 ipython==4.1.2
-opbeat==3.3
+opbeat==3.4.0
 path.py==8.1.2            # via pickleshare
 pexpect==4.0.1            # via ipython
 pickleshare==0.6          # via ipython
