@@ -6,7 +6,7 @@
 #
 
 arrow==0.8.0 # via django-q
-beautifulsoup4==4.4.1
+beautifulsoup4==4.5.1
 blessed==1.14.1           # via django-q
 click==6.6 # via pip-tools
 coverage==4.2
