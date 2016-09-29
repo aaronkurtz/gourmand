@@ -16,7 +16,7 @@ django-async-messages==0.3.1
 django-bootstrap3==7.1.0
 django-braces==1.9.0
 django-compat==1.0.13 # via django-hijack
-django-debug-toolbar==1.4
+django-debug-toolbar==1.5
 django-environ==0.4.0
 django-extensions==1.7.4
 django-hijack==2.1.2
