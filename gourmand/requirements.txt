@@ -45,7 +45,7 @@ setproctitle==1.1.10
 simplegeneric==0.8.1      # via ipython
 six==1.10.0               # via blessed, django-braces, django-compat, django-environ, django-extensions, pip-tools, python-dateutil
 sqlparse==0.1.19          # via django-debug-toolbar
-traitlets==4.1.0          # via ipython
+traitlets==4.3.1 # via ipython
 wcwidth==0.1.7 # via blessed
 whitenoise==3.2.2
 
