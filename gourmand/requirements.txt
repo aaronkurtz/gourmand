@@ -19,7 +19,7 @@ django-compat==1.0.8      # via django-hijack
 django-debug-toolbar==1.4
 django-environ==0.4.0
 django-extensions==1.6.1
-django-hijack==2.0.7
+django-hijack==2.1.2
 django-pagination-bootstrap==1.1
 django-picklefield==0.3.2  # via django-q
 django-q==0.7.16
