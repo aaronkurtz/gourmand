@@ -8,7 +8,7 @@
 arrow==0.7.0              # via django-q
 beautifulsoup4==4.4.1
 blessed==1.14.1           # via django-q
-click==6.3                # via pip-tools
+click==6.6 # via pip-tools
 coverage==4.2
 decorator==4.0.9          # via ipython, traitlets
 defusedxml==0.4.1
