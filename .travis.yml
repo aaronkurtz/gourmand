@@ -19,3 +19,7 @@ script:
     - cd gourmand && python manage.py migrate && python manage.py collectstatic --noinput && OPBEAT_DISABLE_SEND=true coverage run --branch --source='.' ./manage.py test
 after_success:
     - codecov
+
+branches:
+    only:
+        - master
