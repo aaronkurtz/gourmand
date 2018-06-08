@@ -64,9 +64,6 @@ CAMO_PATH, URL - the URL used to construct the public go-camo URLs. Required if 
 
 DEBUG, Boolean.
 
-OPBEAT, django-environ dict - [Opbeat](https://opbeat.com/) configuration settings for performance monitoring and error reporting. Example:
-
-    OPBEAT=ORGANIZATION_ID=hex,APP_ID=hex,SECRET_TOKEN=hex  # Example
 
 ### Vagrant
 

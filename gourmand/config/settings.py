@@ -5,7 +5,7 @@ import os
 
 import environ
 
-env = environ.Env(DEBUG=(bool, False), ALLOWED_HOSTS=(list, []), OPBEAT=(dict, {}),
+env = environ.Env(DEBUG=(bool, False), ALLOWED_HOSTS=(list, []),
                   CAMO_KEY=(str, None))
 
 BASE_DIR = environ.Path(__file__) - 2
@@ -36,7 +36,6 @@ THIRD_PARTY_APPS = (
     'bootstrap3',
     'debug_toolbar',
     'django_q',
-    'opbeat.contrib.django',
     'hijack',
     'compat',
     'pagination_bootstrap',
@@ -53,7 +52,6 @@ LOCAL_APPS = (
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE_CLASSES = (
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
@@ -171,10 +169,6 @@ Q_CLUSTER = {
     'timeout': 300,
     'catch_up': False,  # Run missed scheduled tasks only once
 }
-
-# Opbeat
-OPBEAT = env('OPBEAT')
-
 
 # Camo settings
 CAMO_KEY = env('CAMO_KEY')
