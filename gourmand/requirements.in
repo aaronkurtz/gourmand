@@ -25,7 +25,6 @@ python-dateutil
 requests
 
 # Ops
-opbeat
 
 # Developer Requirements
 ipython

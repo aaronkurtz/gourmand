@@ -6,7 +6,7 @@ cd gourmand
 ! python manage.py makemigrations -v 0 --dry-run -e || { echo "Commit failed - migration needed." 1>&2; RESULT=1; }
 # Run Django unit tests
 python manage.py collectstatic --noinput
-OPBEAT_DISABLE_SEND=true python manage.py test -v 0 || { echo "Commit failed - Django testing failed" 1>&2; RESULT=1;}
+python manage.py test -v 0 || { echo "Commit failed - Django testing failed" 1>&2; RESULT=1;}
 
 cd ..
 git stash pop -q
