@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import pluralize
 from django.views.generic import TemplateView, ListView, FormView, View, RedirectView, DetailView, DeleteView, UpdateView
+from django.utils.html import format_html
 
 from braces.views import LoginRequiredMixin, UserFormKwargsMixin
 from django_q.tasks import async
@@ -143,7 +144,8 @@ class AddSubscription(LoginRequiredMixin, UserFormKwargsMixin, FormView):
             category = Category.objects.get(owner=self.request.user, name='Uncategorized')
         sub = Subscription.objects.create(owner=self.request.user, feed=feed, category=category, title=feed.title)
         sub.populate()
-        messages.success(self.request, "You have subscribed to <strong>{feed}</strong>".format(feed=sub.title))
+        subscription_message = format_html("You have subscribed to <strong>{0}</strong>", sub.title)
+        messages.success(self.request, subscription_message)
         return super().form_valid(form)
 
 
