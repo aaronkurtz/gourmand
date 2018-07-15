@@ -85,7 +85,7 @@ class Reader(LoginRequiredMixin, TemplateView):
             subs = filter(lambda x: x.count, subs)
             context['count_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user, archived=True).count()
         else:
-            context['count_all'] = PersonalArticle.objects.count()
+            context['count_all'] = PersonalArticle.objects.filter(sub__owner=self.request.user).count()
             for cat in categories:
                 cat.count = Subscription.objects.filter(category=cat).aggregate(count=Count('personalarticle'))['count']
             subs = subs.annotate(count=Count('personalarticle'))
