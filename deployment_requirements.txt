@@ -1,4 +1,4 @@
-ansible==2.8.4
+ansible==2.8.5
 ecdsa==0.13
 Jinja2==2.8
 MarkupSafe==0.23
