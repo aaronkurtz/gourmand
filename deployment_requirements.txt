@@ -1,6 +1,6 @@
 ansible==1.9.3
 ecdsa==0.13
-Jinja2==2.8
+Jinja2==2.11.3
 MarkupSafe==0.23
 paramiko==1.15.2
 pycrypto==2.6.1
